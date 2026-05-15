@@ -8,7 +8,10 @@ import BrowseTutors from './pages/BrowseTutors';
 import VirtualClassroom from './pages/VirtualClassroom';
 import TutorSettings from './pages/TutorSettings';
 import AddBalance from './pages/AddBalance';
+import AdminDashboard from './pages/AdminDashboard';
 import { Toaster } from 'react-hot-toast';
+import { NotificationProvider } from './context/NotificationContext';
+import NotificationBell from './components/NotificationBell';
 import './App.css';
 
 function NavBar() {
@@ -27,10 +30,10 @@ function NavBar() {
         SkillVibes
       </Link>
       <div className="nav-links">
-        <Link to="/" className="nav-link">Inicio</Link>
+        <Link to="/" className="nav-link">Home</Link>
         {isAuthenticated ? (
           <>
-            <Link to="/dashboard" className="nav-link">Mis Tutorías</Link>
+            <Link to="/dashboard" className="nav-link">My Classes</Link>
             {user?.role === 'ROLE_STUDENT' && (
               <Link to="/wallet" className="nav-link" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--accent-primary)', fontWeight: 600 }}>
                 <span style={{ background: 'rgba(168,85,247,0.1)', padding: '0.2rem 0.6rem', borderRadius: '50px' }}>
@@ -39,8 +42,12 @@ function NavBar() {
               </Link>
             )}
             {user?.role === 'ROLE_TUTOR' && (
-              <Link to="/tutor/settings" className="nav-link">Configuración de Perfil</Link>
+              <Link to="/tutor/settings" className="nav-link">Profile Settings</Link>
             )}
+            {user?.role === 'ROLE_ADMIN' && (
+              <Link to="/admin" className="nav-link">Admin Dashboard</Link>
+            )}
+            <NotificationBell />
             <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
               {user?.fullName}
             </span>
@@ -49,14 +56,14 @@ function NavBar() {
               className="btn"
               style={{ padding: '0.5rem 1rem', border: '1px solid var(--border-color)', background: 'transparent', color: 'var(--text-color)' }}
             >
-              Salir
+              Logout
             </button>
           </>
         ) : (
           <>
-            <Link to="/login" className="nav-link">Iniciar Sesión</Link>
+            <Link to="/login" className="nav-link">Login</Link>
             <Link to="/register" className="btn btn-primary" style={{ padding: '0.5rem 1rem' }}>
-              Registrarse
+              Register
             </Link>
           </>
         )}
@@ -68,24 +75,27 @@ function NavBar() {
 function App() {
   return (
     <AuthProvider>
-      <Toaster position="top-center" reverseOrder={false} />
-      <Router>
-        <div className="app-container">
-          <NavBar />
-          <main className="main-content">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/browse" element={<BrowseTutors />} />
-              <Route path="/classroom/:id" element={<VirtualClassroom />} />
-              <Route path="/tutor/settings" element={<TutorSettings />} />
-              <Route path="/wallet" element={<AddBalance />} />
-            </Routes>
-          </main>
-        </div>
-      </Router>
+      <NotificationProvider>
+        <Toaster position="top-center" reverseOrder={false} />
+        <Router>
+          <div className="app-container">
+            <NavBar />
+            <main className="main-content">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/browse" element={<BrowseTutors />} />
+                <Route path="/classroom/:id" element={<VirtualClassroom />} />
+                <Route path="/tutor/settings" element={<TutorSettings />} />
+                <Route path="/wallet" element={<AddBalance />} />
+                <Route path="/admin" element={<AdminDashboard />} />
+              </Routes>
+            </main>
+          </div>
+        </Router>
+      </NotificationProvider>
     </AuthProvider>
   );
 }

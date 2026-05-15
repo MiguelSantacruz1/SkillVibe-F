@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, Clock, DollarSign, X, CheckCircle2, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { tutoriasApi, type TutorProfile } from '../services/api';
+import { classesApi, type TutorProfile } from '../services/api';
 
 interface BookingModalProps {
   tutor: TutorProfile;
@@ -14,7 +14,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
     date: '',
     time: '',
     description: '',
-    materia: tutor.subjects[0] || ''
+    subject: tutor.subjects[0] || ''
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -25,20 +25,20 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
 
     try {
       const fechaHora = `${formData.date}T${formData.time}:00`;
-      await tutoriasApi.reservar({
+      await classesApi.book({
         tutorId: tutor.userId,
-        materia: formData.materia,
-        descripcion: formData.description,
+        subject: formData.subject,
+        description: formData.description,
         fechaHora
       });
       setSuccess(true);
-      toast.success('¡Reserva realizada!');
+      toast.success('Booking confirmed!');
       setTimeout(() => {
         onSuccess();
         onClose();
       }, 2000);
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'No se pudo realizar la reserva. Verifica tu saldo.');
+      toast.error(err.response?.data?.message || 'Could not complete booking. Check your balance.');
     } finally {
       setLoading(false);
     }
@@ -71,20 +71,20 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
             }}>
               <CheckCircle2 size={48} color="#10b981" />
             </div>
-            <h2 style={{ marginBottom: '0.5rem' }}>¡Reserva Confirmada!</h2>
-            <p style={{ color: 'var(--text-muted)' }}>Tu clase con {tutor.fullName} ha sido programada con éxito.</p>
+            <h2 style={{ marginBottom: '0.5rem' }}>Booking Confirmed!</h2>
+            <p style={{ color: 'var(--text-muted)' }}>Your class with {tutor.fullName} has been scheduled successfully.</p>
           </div>
         ) : (
           <>
             <div style={{ marginBottom: '2rem' }}>
-              <h2 style={{ marginBottom: '0.5rem' }}>Reservar Tutoría</h2>
-              <p style={{ color: 'var(--text-muted)' }}>Estás por agendar una sesión con <strong>{tutor.fullName}</strong></p>
+              <h2 style={{ marginBottom: '0.5rem' }}>Book Class</h2>
+              <p style={{ color: 'var(--text-muted)' }}>You are about to book a session with <strong>{tutor.fullName}</strong></p>
             </div>
 
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Fecha</label>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Date</label>
                   <div style={{ position: 'relative' }}>
                     <Calendar size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                     <input 
@@ -98,7 +98,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Hora</label>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Time</label>
                   <div style={{ position: 'relative' }}>
                     <Clock size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                     <input 
@@ -114,22 +114,22 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Materia</label>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Subject</label>
                 <select 
                   className="form-input"
-                  value={formData.materia}
-                  onChange={(e) => setFormData({...formData, materia: e.target.value})}
+                  value={formData.subject}
+                  onChange={(e) => setFormData({...formData, subject: e.target.value})}
                 >
                   {tutor.subjects.map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>¿Qué quieres aprender?</label>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>What do you want to learn?</label>
                 <textarea 
                   className="form-input" 
                   rows={3} 
-                  placeholder="Describe brevemente tus dudas o temas a tratar..."
+                  placeholder="Briefly describe your questions or topics..."
                   value={formData.description}
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
                   style={{ resize: 'none' }}
@@ -143,7 +143,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <DollarSign size={18} color="#10b981" />
-                  <span style={{ fontWeight: 600 }}>Total a pagar:</span>
+                  <span style={{ fontWeight: 600 }}>Total to pay:</span>
                 </div>
                 <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#10b981' }}>
                   ${tutor.hourlyRate.toFixed(2)}
@@ -156,7 +156,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
                 disabled={loading}
                 style={{ padding: '1rem', display: 'flex', justifyContent: 'center', gap: '0.5rem', alignItems: 'center' }}
               >
-                {loading ? <Loader2 className="animate-spin" size={20} /> : 'Confirmar Reserva'}
+                {loading ? <Loader2 className="animate-spin" size={20} /> : 'Confirm Booking'}
               </button>
             </form>
           </>

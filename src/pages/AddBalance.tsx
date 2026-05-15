@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { CreditCard, DollarSign, History, Loader2, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { pagoApi } from '../services/api';
+import { paymentApi } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 const AddBalance = () => {
@@ -19,10 +19,10 @@ const AddBalance = () => {
 
   const loadHistory = async () => {
     try {
-      const { data } = await pagoApi.getHistorial();
+      const { data } = await paymentApi.getHistory();
       setHistory(data);
     } catch (err) {
-      console.error("Error al cargar historial", err);
+      console.error("Error loading history", err);
     } finally {
       setLoadingHistory(false);
     }
@@ -31,11 +31,11 @@ const AddBalance = () => {
   const handleRecharge = async () => {
     setLoading(true);
     try {
-      const { data } = await pagoApi.createCheckout(amount);
+      const { data } = await paymentApi.createCheckout(amount);
       // Redirigir a Stripe Checkout
       window.location.href = data;
     } catch (err) {
-      toast.error("Error al iniciar el proceso de pago.");
+      toast.error("Error initiating payment process.");
     } finally {
       setLoading(false);
     }
@@ -46,8 +46,8 @@ const AddBalance = () => {
   return (
     <div className="container animate-fade-in" style={{ maxWidth: '1000px', paddingTop: '3rem' }}>
       <div style={{ marginBottom: '3rem' }}>
-        <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>Billetera SkillVibe</h1>
-        <p style={{ color: 'var(--text-muted)' }}>Carga saldo para reservar tus tutorías o revisa tus movimientos.</p>
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>SkillVibe Wallet</h1>
+        <p style={{ color: 'var(--text-muted)' }}>Add balance to book your classes or check your history.</p>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '2rem' }}>
@@ -55,7 +55,7 @@ const AddBalance = () => {
         {/* Recharge Card */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           <div className="glass-card" style={{ padding: '2rem', textAlign: 'center', background: 'linear-gradient(135deg, rgba(168,85,247,0.1) 0%, rgba(236,72,153,0.1) 100%)' }}>
-            <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>Saldo Disponible</p>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>Available Balance</p>
             <h2 style={{ fontSize: '3.5rem', fontWeight: 800, color: 'var(--accent-primary)' }}>
               ${user?.balance?.toFixed(2)}
             </h2>
@@ -63,7 +63,7 @@ const AddBalance = () => {
 
           <div className="glass-card" style={{ padding: '2rem' }}>
             <h3 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <CreditCard size={20} color="var(--accent-primary)" /> Recargar Saldo
+              <CreditCard size={20} color="var(--accent-primary)" /> Recharge Balance
             </h3>
             
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1.5rem' }}>
@@ -88,7 +88,7 @@ const AddBalance = () => {
             </div>
 
             <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>Monto Personalizado</label>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>Custom Amount</label>
               <div style={{ position: 'relative' }}>
                 <DollarSign size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                 <input 
@@ -107,11 +107,11 @@ const AddBalance = () => {
               className="btn btn-primary" 
               style={{ width: '100%', padding: '1rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}
             >
-              {loading ? <Loader2 className="animate-spin" size={20} /> : <><DollarSign size={20} /> Recargar Ahora</>}
+              {loading ? <Loader2 className="animate-spin" size={20} /> : <><DollarSign size={20} /> Recharge Now</>}
             </button>
             
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center', marginTop: '1rem' }}>
-              Pagos procesados de forma segura por <strong>Stripe</strong>.
+              Payments processed securely by <strong>Stripe</strong>.
             </p>
           </div>
         </div>
@@ -119,7 +119,7 @@ const AddBalance = () => {
         {/* History Card */}
         <div className="glass-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column' }}>
           <h3 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <History size={20} color="var(--accent-primary)" /> Historial de Movimientos
+            <History size={20} color="var(--accent-primary)" /> Transaction History
           </h3>
 
           <div style={{ flex: 1, overflowY: 'auto', maxHeight: '500px' }}>
@@ -129,7 +129,7 @@ const AddBalance = () => {
               </div>
             ) : history.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
-                No tienes movimientos registrados aún.
+                You don't have any transactions yet.
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>

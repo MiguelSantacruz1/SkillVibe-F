@@ -40,7 +40,7 @@ const Register = () => {
           subjects: subjectList
         });
         
-        toast.success('¡Registro exitoso! Tu perfil como tutor está pendiente de verificación.', { duration: 6000 });
+        toast.success('Registration successful! Your tutor profile is pending verification.', { duration: 6000 });
         setTimeout(() => navigate('/login'), 4000);
       } else {
         // 1. Register user
@@ -48,13 +48,13 @@ const Register = () => {
         // 2. Auto-login after registration
         const { data } = await authApi.login({ email, password });
         login(data.token, data.user);
-        toast.success('¡Cuenta creada con éxito!');
+        toast.success('Account created successfully!');
         navigate('/dashboard');
       }
     } catch (err: unknown) {
       const message =
         (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
-        'Error al registrar. Revisa los datos o puede que el email ya esté en uso.';
+        'Error registering. Check the data or the email may already be in use.';
       toast.error(message);
     } finally {
       setLoading(false);
@@ -66,13 +66,13 @@ const Register = () => {
       <div className="auth-container glass-card" style={{ maxWidth: '540px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <UserPlus size={48} color="#a855f7" style={{ marginBottom: '1rem' }} />
-          <h2>Crear cuenta</h2>
-          <p style={{ color: 'var(--text-muted)' }}>Únete a la comunidad SkillVibes</p>
+          <h2>Create account</h2>
+          <p style={{ color: 'var(--text-muted)' }}>Join the SkillVibes community</p>
         </div>
 
         <form onSubmit={handleRegister}>
           <div className="form-group">
-            <label className="form-label">¿Cómo participarás?</label>
+            <label className="form-label">How will you participate?</label>
             <div style={{ display: 'flex', gap: '1rem' }}>
               <label style={{
                 flex: 1, padding: '0.75rem', borderRadius: '8px', cursor: 'pointer',
@@ -86,7 +86,7 @@ const Register = () => {
                   onChange={() => setRole('STUDENT')}
                   style={{ display: 'none' }}
                 />
-                🎓 Estudiante
+                🎓 Student
               </label>
               <label style={{
                 flex: 1, padding: '0.75rem', borderRadius: '8px', cursor: 'pointer',
@@ -106,11 +106,11 @@ const Register = () => {
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="fullName">Nombre completo</label>
+            <label className="form-label" htmlFor="fullName">Full Name</label>
             <input
               type="text" id="fullName" className="form-input"
               value={fullName} onChange={(e) => setFullName(e.target.value)}
-              placeholder="Tu nombre completo" required
+              placeholder="Your full name" required
             />
           </div>
 
@@ -124,11 +124,11 @@ const Register = () => {
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="reg-password">Contraseña</label>
+            <label className="form-label" htmlFor="reg-password">Password</label>
             <input
               type="password" id="reg-password" className="form-input"
               value={password} onChange={(e) => setPassword(e.target.value)}
-              placeholder="Mínimo 6 caracteres" minLength={6} required autoComplete="new-password"
+              placeholder="Minimum 6 characters" minLength={6} required autoComplete="new-password"
             />
           </div>
 
@@ -137,68 +137,68 @@ const Register = () => {
               background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)',
               padding: '1.25rem', borderRadius: '8px', marginBottom: '1.5rem', marginTop: '0.5rem'
             }}>
-              <h4 style={{ marginBottom: '1rem', color: '#a855f7' }}>📋 Perfil Profesional</h4>
+              <h4 style={{ marginBottom: '1rem', color: '#a855f7' }}>📋 Professional Profile</h4>
               
               <div className="form-group">
-                <label className="form-label" htmlFor="bio">Biografía Profesional (Mín. 50 caracteres)</label>
+                <label className="form-label" htmlFor="bio">Professional Biography (Min. 50 characters)</label>
                 <textarea
                   id="bio" className="form-input" rows={3}
                   value={bio} onChange={(e) => setBio(e.target.value)}
-                  placeholder="Cuéntanos sobre ti, tu metodología y por qué los estudiantes deberían elegirte."
+                  placeholder="Tell us about yourself, your methodology, and why students should choose you."
                   required={role === 'TUTOR'} minLength={50}
                 />
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div className="form-group">
-                  <label className="form-label" htmlFor="hourlyRate">Tarifa por Hora ($)</label>
+                  <label className="form-label" htmlFor="hourlyRate">Hourly Rate ($)</label>
                   <input
                     type="number" id="hourlyRate" className="form-input"
                     value={hourlyRate} onChange={(e) => setHourlyRate(e.target.value ? Number(e.target.value) : '')}
-                    placeholder="Ej. 15.50" required={role === 'TUTOR'} min="1" step="0.1"
+                    placeholder="Ex. 15.50" required={role === 'TUTOR'} min="1" step="0.1"
                   />
                 </div>
                 <div className="form-group">
-                  <label className="form-label" htmlFor="yearsOfExperience">Años de Exp.</label>
+                  <label className="form-label" htmlFor="yearsOfExperience">Years of Exp.</label>
                   <input
                     type="number" id="yearsOfExperience" className="form-input"
                     value={yearsOfExperience} onChange={(e) => setYearsOfExperience(e.target.value ? Number(e.target.value) : '')}
-                    placeholder="Ej. 3" required={role === 'TUTOR'} min="0"
+                    placeholder="Ex. 3" required={role === 'TUTOR'} min="0"
                   />
                 </div>
               </div>
 
               <div className="form-group">
-                <label className="form-label" htmlFor="subjects">Materias (separadas por coma)</label>
+                <label className="form-label" htmlFor="subjects">Subjects (comma separated)</label>
                 <input
                   type="text" id="subjects" className="form-input"
                   value={subjects} onChange={(e) => setSubjects(e.target.value)}
-                  placeholder="Ej. Matemáticas, Física, Programación" required={role === 'TUTOR'}
+                  placeholder="Ex. Mathematics, Physics, Programming" required={role === 'TUTOR'}
                 />
               </div>
 
               <div className="form-group">
-                <label className="form-label" htmlFor="profilePictureUrl">URL Foto de Perfil</label>
+                <label className="form-label" htmlFor="profilePictureUrl">Profile Picture URL</label>
                 <input
                   type="url" id="profilePictureUrl" className="form-input"
                   value={profilePictureUrl} onChange={(e) => setProfilePictureUrl(e.target.value)}
-                  placeholder="https://ejemplo.com/mifoto.jpg" required={role === 'TUTOR'}
+                  placeholder="https://example.com/mypic.jpg" required={role === 'TUTOR'}
                 />
               </div>
               <div className="form-group">
-                <label className="form-label" htmlFor="identityCardUrl">URL Cédula de Identidad</label>
+                <label className="form-label" htmlFor="identityCardUrl">Identity Card URL</label>
                 <input
                   type="url" id="identityCardUrl" className="form-input"
                   value={identityCardUrl} onChange={(e) => setIdentityCardUrl(e.target.value)}
-                  placeholder="Documento para validación" required={role === 'TUTOR'}
+                  placeholder="Document for validation" required={role === 'TUTOR'}
                 />
               </div>
               <div className="form-group">
-                <label className="form-label" htmlFor="degreeUrl">URL Título o Soporte Académico</label>
+                <label className="form-label" htmlFor="degreeUrl">Degree or Academic Support URL</label>
                 <input
                   type="url" id="degreeUrl" className="form-input"
                   value={degreeUrl} onChange={(e) => setDegreeUrl(e.target.value)}
-                  placeholder="Certificado de estudios" required={role === 'TUTOR'}
+                  placeholder="Study certificate" required={role === 'TUTOR'}
                 />
               </div>
             </div>
@@ -210,13 +210,13 @@ const Register = () => {
             style={{ width: '100%', marginTop: '0.5rem' }}
             disabled={loading}
           >
-            {loading ? 'Procesando...' : 'Registrarme'}
+            {loading ? 'Processing...' : 'Register'}
           </button>
         </form>
 
         <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-          ¿Ya tienes cuenta?{' '}
-          <Link to="/login" style={{ color: '#a855f7', textDecoration: 'none' }}>Iniciar sesión</Link>
+          Already have an account?{' '}
+          <Link to="/login" style={{ color: '#a855f7', textDecoration: 'none' }}>Login</Link>
         </div>
       </div>
     </div>

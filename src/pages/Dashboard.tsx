@@ -1,17 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Search, Calendar, Clock, User, Filter, LogOut, BookOpen, DollarSign, Star, Code, Globe, PenTool, Sparkles, TrendingUp, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { tutoriasApi, type Tutoria } from '../services/api';
+import { classesApi, type TutoringClass } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import ReviewModal from '../components/ReviewModal';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  const [tutorias, setTutorias] = useState<Tutoria[]>([]);
+  const [classes, setClasses] = useState<TutoringClass[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [selectedClassForReview, setSelectedClassForReview] = useState<{id: number, tutorName: string} | null>(null);
 
   useEffect(() => {
     if (!user) {
@@ -22,10 +25,10 @@ const Dashboard = () => {
     const fetchBoard = async () => {
       try {
         setLoading(true);
-        const { data } = await tutoriasApi.getMyBoard(user.id);
-        setTutorias(data);
+        const { data } = await classesApi.getMyBoard(user.id);
+        setClasses(data);
       } catch {
-        setError('No se pudo cargar el tablero. Verifica que el backend esté corriendo.');
+        setError('Could not load the dashboard. Check if the backend is running.');
       } finally {
         setLoading(false);
       }
@@ -41,22 +44,22 @@ const Dashboard = () => {
 
   const handleFinalize = async (id: number) => {
     try {
-      const { data } = await tutoriasApi.finalize(id);
-      setTutorias((prev) => prev.map((t) => (t.id === id ? data : t)));
+      const { data } = await classesApi.finalize(id);
+      setClasses((prev) => prev.map((t) => (t.id === id ? data : t)));
     } catch {
-      alert('No tienes permisos para finalizar esta tutoría.');
+      alert('You do not have permission to complete this class.');
     }
   };
 
-  const filtered = tutorias.filter((t) =>
-    t.materia.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    t.descripcion?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filtered = classes.filter((t) =>
+    t.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    t.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const estadoColor: Record<string, string> = {
-    PROGRAMADA: '#6366f1',
-    EN_CURSO: '#f59e0b',
-    FINALIZADA: '#10b981',
+  const statusColor: Record<string, string> = {
+    PROGRAMMED: '#6366f1',
+    IN_PROGRESS: '#f59e0b',
+    COMPLETED: '#10b981',
   };
 
   return (
@@ -64,9 +67,9 @@ const Dashboard = () => {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h2>¡Hola, {user?.fullName ?? 'Usuario'}! 👋</h2>
+          <h2>Hello, {user?.fullName ?? 'User'}! 👋</h2>
           <p style={{ color: 'var(--text-muted)' }}>
-            Rol: <span style={{ color: '#a855f7', fontWeight: 600 }}>{user?.role}</span>
+            Role: <span style={{ color: '#a855f7', fontWeight: 600 }}>{user?.role}</span>
             &nbsp;·&nbsp; Balance:{' '}
             <span style={{ color: '#10b981', fontWeight: 600 }}>
               ${user?.balance?.toFixed(2) ?? '0.00'}
@@ -75,7 +78,7 @@ const Dashboard = () => {
         </div>
         <button className="btn" onClick={handleLogout}
           style={{ display: 'flex', gap: '0.5rem', border: '1px solid var(--border-color)', background: 'transparent', color: 'var(--text-color)' }}>
-          <LogOut size={18} /> Cerrar sesión
+          <LogOut size={18} /> Logout
         </button>
       </div>
 
@@ -84,8 +87,8 @@ const Dashboard = () => {
         <div className="glass-card" style={{ padding: '1.25rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
           <BookOpen size={28} color="#a855f7" />
           <div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Total Tutorías</p>
-            <p style={{ fontSize: '1.75rem', fontWeight: 700 }}>{tutorias.length}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Total Classes</p>
+            <p style={{ fontSize: '1.75rem', fontWeight: 700 }}>{classes.length}</p>
           </div>
         </div>
         <div className="glass-card" style={{ padding: '1.25rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
@@ -98,9 +101,9 @@ const Dashboard = () => {
         <div className="glass-card" style={{ padding: '1.25rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
           <Calendar size={28} color="#f59e0b" />
           <div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Programadas</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Programmed</p>
             <p style={{ fontSize: '1.75rem', fontWeight: 700 }}>
-              {tutorias.filter((t) => t.estado === 'PROGRAMADA').length}
+              {classes.filter((t) => t.status === 'PROGRAMMED').length}
             </p>
           </div>
         </div>
@@ -113,14 +116,14 @@ const Dashboard = () => {
           <input
             type="text"
             className="form-input"
-            placeholder="Buscar por materia o descripción..."
+            placeholder="Search by subject or description..."
             style={{ paddingLeft: '3rem' }}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <button className="btn" style={{ padding: '0.75rem 1.25rem', border: '1px solid var(--border-color)', background: 'transparent', color: 'var(--text-color)', display: 'flex', gap: '0.5rem' }}>
-          <Filter size={18} /> Filtros
+          <Filter size={18} /> Filters
         </button>
       </div>
 
@@ -128,7 +131,7 @@ const Dashboard = () => {
       {loading && (
         <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-muted)' }}>
           <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>⏳</div>
-          Cargando tus tutorías...
+          Loading your classes...
         </div>
       )}
 
@@ -144,57 +147,69 @@ const Dashboard = () => {
       {!loading && !error && (
         <>
           <div className="grid">
-            {filtered.map((tutoria) => (
-              <div key={tutoria.id} className="glass-card item-card">
+            {filtered.map((tutoringClass) => (
+              <div key={tutoringClass.id} className="glass-card item-card">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <span className="item-badge">{tutoria.materia}</span>
+                  <span className="item-badge">{tutoringClass.subject}</span>
                   <span style={{
                     fontSize: '0.8rem', fontWeight: 600, padding: '0.2rem 0.6rem',
-                    borderRadius: '9999px', background: `${estadoColor[tutoria.estado] ?? '#64748b'}22`,
-                    color: estadoColor[tutoria.estado] ?? '#94a3b8',
-                    border: `1px solid ${estadoColor[tutoria.estado] ?? '#64748b'}44`
+                    borderRadius: '9999px', background: `${statusColor[tutoringClass.status] ?? '#64748b'}22`,
+                    color: statusColor[tutoringClass.status] ?? '#94a3b8',
+                    border: `1px solid ${statusColor[tutoringClass.status] ?? '#64748b'}44`
                   }}>
-                    {tutoria.estado}
+                    {tutoringClass.status}
                   </span>
                 </div>
 
-                <h3 style={{ margin: '0.5rem 0' }}>{tutoria.descripcion}</h3>
+                <h3 style={{ margin: '0.5rem 0' }}>{tutoringClass.description}</h3>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <User size={15} />
-                    <span>Tutor: {tutoria.tutor?.fullName ?? '—'}</span>
+                    <span>Tutor: {tutoringClass.tutor?.fullName ?? '—'}</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <Calendar size={15} />
-                    <span>{new Date(tutoria.fechaHora).toLocaleDateString('es-CO', { dateStyle: 'medium' })}</span>
+                    <span>{new Date(tutoringClass.fechaHora).toLocaleDateString('en-US', { dateStyle: 'medium' })}</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <Clock size={15} />
-                    <span>{new Date(tutoria.fechaHora).toLocaleTimeString('es-CO', { timeStyle: 'short' })}</span>
+                    <span>{new Date(tutoringClass.fechaHora).toLocaleTimeString('en-US', { timeStyle: 'short' })}</span>
                   </div>
                 </div>
 
                 <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ color: '#10b981', fontWeight: 700, fontSize: '1.1rem' }}>
-                    ${tutoria.precio?.toFixed(2)}
+                    ${tutoringClass.price?.toFixed(2)}
                   </span>
-                  {user?.role === 'TUTOR' && tutoria.estado !== 'FINALIZADA' && (
+                  {user?.role === 'TUTOR' && tutoringClass.status !== 'COMPLETED' && (
                     <button
                       className="btn btn-primary"
                       style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}
-                      onClick={() => handleFinalize(tutoria.id)}
+                      onClick={() => handleFinalize(tutoringClass.id)}
                     >
-                      Finalizar
+                      Complete
                     </button>
                   )}
-                  {tutoria.meetingLink && (
+                  {user?.role === 'STUDENT' && tutoringClass.status === 'COMPLETED' && (
+                    <button
+                      className="btn btn-primary"
+                      style={{ padding: '0.4rem 1rem', fontSize: '0.85rem', background: '#eab308', borderColor: '#eab308' }}
+                      onClick={() => {
+                        setSelectedClassForReview({ id: tutoringClass.id, tutorName: tutoringClass.tutor?.fullName || 'Tutor' });
+                        setReviewModalOpen(true);
+                      }}
+                    >
+                      Review
+                    </button>
+                  )}
+                  {tutoringClass.meetingLink && tutoringClass.status !== 'COMPLETED' && (
                     <button 
-                      onClick={() => navigate(`/classroom/${tutoria.id}`)}
+                      onClick={() => navigate(`/classroom/${tutoringClass.id}`)}
                       className="btn btn-primary" 
                       style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}
                     >
-                      Unirse
+                      Join
                     </button>
                   )}
                 </div>
@@ -215,31 +230,31 @@ const Dashboard = () => {
                   
                   <Sparkles size={48} color="#ec4899" style={{ margin: '0 auto 1rem auto' }} />
                   <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem', background: 'linear-gradient(to right, #e879f9, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                    Desata tu máximo potencial
+                    Unleash your maximum potential
                   </h2>
                   <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto 2rem auto' }}>
-                    Aún no tienes tutorías programadas. Conecta con expertos de todo el mundo y lleva tus habilidades al siguiente nivel.
+                    You don't have any programmed classes yet. Connect with experts around the world and take your skills to the next level.
                   </p>
                   <button 
                     className="btn btn-primary" 
                     onClick={() => navigate('/browse')}
                     style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', display: 'inline-flex', gap: '0.5rem', alignItems: 'center', borderRadius: '9999px', boxShadow: '0 4px 14px 0 rgba(168, 85, 247, 0.39)' }}
                   >
-                    Explorar Tutores <ChevronRight size={18} />
+                    Browse Tutors <ChevronRight size={18} />
                   </button>
                 </div>
 
-                {/* Materias Populares */}
+                {/* Popular Subjects */}
                 <div>
                   <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
-                    <TrendingUp size={24} color="#a855f7" /> Materias Populares
+                    <TrendingUp size={24} color="#a855f7" /> Popular Subjects
                   </h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
                     {[
-                      { name: 'Programación', icon: <Code size={24} color="#3b82f6" />, color: '#3b82f6' },
-                      { name: 'Matemáticas', icon: <TrendingUp size={24} color="#10b981" />, color: '#10b981' },
-                      { name: 'Idiomas', icon: <Globe size={24} color="#f59e0b" />, color: '#f59e0b' },
-                      { name: 'Diseño UX/UI', icon: <PenTool size={24} color="#ec4899" />, color: '#ec4899' },
+                      { name: 'Programming', icon: <Code size={24} color="#3b82f6" />, color: '#3b82f6' },
+                      { name: 'Mathematics', icon: <TrendingUp size={24} color="#10b981" />, color: '#10b981' },
+                      { name: 'Languages', icon: <Globe size={24} color="#f59e0b" />, color: '#f59e0b' },
+                      { name: 'UX/UI Design', icon: <PenTool size={24} color="#ec4899" />, color: '#ec4899' },
                     ].map((materia) => (
                       <div key={materia.name} className="glass-card" style={{
                         padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', cursor: 'pointer',
@@ -256,10 +271,10 @@ const Dashboard = () => {
                   </div>
                 </div>
 
-                {/* Tutores Destacados Mockup */}
+                {/* Featured Tutors */}
                 <div>
                   <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
-                    <Star size={24} color="#eab308" /> Tutores Destacados
+                    <Star size={24} color="#eab308" /> Featured Tutors
                   </h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
                     {[
@@ -290,15 +305,28 @@ const Dashboard = () => {
             {filtered.length === 0 && user?.role === 'TUTOR' && (
               <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '5rem 2rem', background: 'rgba(168,85,247,0.05)', borderRadius: '16px', border: '1px dashed rgba(168,85,247,0.3)' }}>
                 <BookOpen size={64} color="#a855f7" style={{ margin: '0 auto 1.5rem auto', opacity: 0.8 }} />
-                <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Tu agenda está libre</h2>
+                <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Your schedule is free</h2>
                 <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', maxWidth: '500px', margin: '0 auto 2rem auto' }}>
-                  Aún no tienes tutorías programadas con estudiantes. Optimiza tu perfil y prepárate para compartir tus conocimientos.
+                  You don't have any classes programmed with students yet. Optimize your profile and get ready to share your knowledge.
                 </p>
-                <button className="btn btn-primary" style={{ padding: '0.75rem 1.5rem' }}>Completar mi perfil</button>
+                <button className="btn btn-primary" style={{ padding: '0.75rem 1.5rem' }}>Complete my profile</button>
               </div>
             )}
           </div>
         </>
+      )}
+
+      {selectedClassForReview && (
+        <ReviewModal
+          isOpen={reviewModalOpen}
+          onClose={() => setReviewModalOpen(false)}
+          tutoringClassId={selectedClassForReview.id}
+          tutorName={selectedClassForReview.tutorName}
+          onSuccess={() => {
+            // Refresh dashboard
+            classesApi.getMyBoard(user!.id).then(res => setClasses(res.data));
+          }}
+        />
       )}
     </div>
   );

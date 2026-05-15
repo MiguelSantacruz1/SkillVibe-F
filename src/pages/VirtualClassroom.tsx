@@ -111,12 +111,12 @@ const VirtualClassroom = () => {
         {/* Header Controls */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(30,41,59,0.5)', padding: '0.75rem 1.5rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>
           <button onClick={() => navigate('/dashboard')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
-            <ChevronLeft size={20} /> Salir del Aula
+            <ChevronLeft size={20} /> Leave Classroom
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <span style={{ fontSize: '0.9rem', color: connected ? '#10b981' : '#f87171', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: connected ? '#10b981' : '#f87171' }} />
-              {connected ? 'Sincronizado' : 'Desconectado'}
+              {connected ? 'Synchronized' : 'Disconnected'}
             </span>
           </div>
         </div>
@@ -133,9 +133,9 @@ const VirtualClassroom = () => {
           
           {/* Toolbar Overlay */}
           <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', background: '#1e293b', padding: '0.5rem 1rem', borderRadius: '50px', display: 'flex', gap: '1rem', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>
-             <button onClick={handleClear} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', padding: '0.5rem' }} title="Limpiar">Limpiar</button>
+             <button onClick={handleClear} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', padding: '0.5rem' }} title="Clear">Clear</button>
              <button onClick={handleAnalyze} disabled={loadingAI} style={{ background: 'linear-gradient(to right, #a855f7, #ec4899)', border: 'none', color: 'white', padding: '0.5rem 1.25rem', borderRadius: '25px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
-               {loadingAI ? 'Analizando...' : <><Sparkles size={16} /> Analizar con IA</>}
+               {loadingAI ? 'Analyzing...' : <><Sparkles size={16} /> Analyze with AI</>}
              </button>
           </div>
         </div>
@@ -143,11 +143,11 @@ const VirtualClassroom = () => {
         {/* Video Strip (Mock) */}
         <div style={{ display: 'flex', gap: '1rem', height: '120px', flexWrap: 'wrap' }}>
           <div style={{ flex: '1 1 150px', background: '#1e293b', borderRadius: '12px', position: 'relative', overflow: 'hidden', height: '100px' }}>
-            <div style={{ position: 'absolute', bottom: '0.5rem', left: '0.5rem', background: 'rgba(0,0,0,0.5)', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.7rem' }}>Tú (Estudiante)</div>
+            <div style={{ position: 'absolute', bottom: '0.5rem', left: '0.5rem', background: 'rgba(0,0,0,0.5)', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.7rem' }}>You (Student)</div>
             <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}><User size={40} color="#64748b" /></div>
           </div>
           <div style={{ flex: '1 1 150px', background: '#1e293b', borderRadius: '12px', position: 'relative', overflow: 'hidden', height: '100px' }}>
-             <div style={{ position: 'absolute', bottom: '0.5rem', left: '0.5rem', background: 'rgba(0,0,0,0.5)', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.7rem' }}>Profesor</div>
+             <div style={{ position: 'absolute', bottom: '0.5rem', left: '0.5rem', background: 'rgba(0,0,0,0.5)', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.7rem' }}>Tutor</div>
              <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Video size={40} color="#64748b" /></div>
           </div>
           <div style={{ flex: '1 1 200px', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', height: '50px' }}>
@@ -163,7 +163,7 @@ const VirtualClassroom = () => {
       <div className="classroom-sidebar" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div style={{ flex: 1, background: 'rgba(30,41,59,0.5)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
           <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', fontSize: '1.1rem' }}>
-            <Sparkles size={20} color="#a855f7" /> Retroalimentación IA
+            <Sparkles size={20} color="#a855f7" /> AI Feedback
           </h3>
           <div style={{ flex: 1, overflowY: 'auto', fontSize: '0.95rem', lineHeight: '1.6', color: '#cbd5e1' }}>
             {feedback ? (
@@ -173,7 +173,7 @@ const VirtualClassroom = () => {
             ) : (
               <div style={{ textAlign: 'center', color: '#64748b', marginTop: '2rem' }}>
                 <Layout size={48} style={{ marginBottom: '1rem', opacity: 0.3 }} />
-                <p>Usa la pizarra y pulsa "Analizar con IA" para recibir correcciones en tiempo real.</p>
+                <p>Use the board and click "Analyze with AI" to receive real-time corrections.</p>
               </div>
             )}
           </div>
@@ -181,10 +181,10 @@ const VirtualClassroom = () => {
 
         <div style={{ height: '250px', background: 'rgba(30,41,59,0.5)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', padding: '1rem', display: 'flex', flexDirection: 'column' }}>
           <div style={{ flex: 1, overflowY: 'auto', marginBottom: '0.5rem' }}>
-            <p style={{ fontSize: '0.8rem', color: '#64748b', textAlign: 'center' }}>Hoy, 10:30 AM</p>
+            <p style={{ fontSize: '0.8rem', color: '#64748b', textAlign: 'center' }}>Today, 10:30 AM</p>
           </div>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <input type="text" placeholder="Escribe un mensaje..." style={{ flex: 1, background: '#1e293b', border: '1px solid #334155', borderRadius: '8px', padding: '0.5rem 1rem', color: 'white', fontSize: '0.9rem' }} />
+            <input type="text" placeholder="Type a message..." style={{ flex: 1, background: '#1e293b', border: '1px solid #334155', borderRadius: '8px', padding: '0.5rem 1rem', color: 'white', fontSize: '0.9rem' }} />
             <button style={{ background: '#a855f7', border: 'none', borderRadius: '8px', padding: '0.5rem', color: 'white' }}><Send size={18} /></button>
           </div>
         </div>

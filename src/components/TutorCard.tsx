@@ -35,7 +35,7 @@ const TutorCard: React.FC<TutorCardProps> = ({ tutor, onBook }) => {
           {tutor.subjects.slice(0, 3).map((sub) => (
             <span key={sub} className="item-badge" style={{ fontSize: '0.7rem' }}>{sub}</span>
           ))}
-          {tutor.subjects.length > 3 && <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>+{tutor.subjects.length - 3} más</span>}
+          {tutor.subjects.length > 3 && <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>+{tutor.subjects.length - 3} more</span>}
         </div>
 
         <p style={{ 
@@ -48,17 +48,22 @@ const TutorCard: React.FC<TutorCardProps> = ({ tutor, onBook }) => {
           overflow: 'hidden',
           marginBottom: '1rem'
         }}>
-          {tutor.bio || 'Sin biografía disponible.'}
+          {tutor.bio || 'No bio available.'}
         </p>
 
         <div style={{ display: 'flex', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
             <Star size={14} color="#eab308" fill="#eab308" />
-            <span style={{ fontWeight: 600, color: 'var(--text-color)' }}>4.9</span>
+            <span style={{ fontWeight: 600, color: 'var(--text-color)' }}>
+              {tutor.averageRating > 0 ? tutor.averageRating.toFixed(1) : 'New'}
+            </span>
+            <span style={{ fontSize: '0.75rem' }}>
+              ({tutor.totalReviews})
+            </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
             <Clock size={14} />
-            <span>{tutor.yearsOfExperience} años exp.</span>
+            <span>{tutor.yearsOfExperience} years exp.</span>
           </div>
         </div>
       </div>
@@ -68,7 +73,7 @@ const TutorCard: React.FC<TutorCardProps> = ({ tutor, onBook }) => {
         onClick={() => onBook?.(tutor)}
         style={{ marginTop: '1.5rem', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}
       >
-        Reservar Ahora <ChevronRight size={16} />
+        Book Now <ChevronRight size={16} />
       </button>
     </div>
   );

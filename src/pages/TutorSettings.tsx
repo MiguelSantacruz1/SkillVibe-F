@@ -18,7 +18,7 @@ const TutorSettings = () => {
       const { data } = await tutorApi.getMyProfile();
       setProfile(data);
     } catch (err) {
-      toast.error('Error al cargar el perfil.');
+      toast.error('Error loading profile.');
     } finally {
       setLoading(false);
     }
@@ -39,9 +39,9 @@ const TutorSettings = () => {
         credentialsUrl: profile.credentialsUrl,
         profilePictureUrl: profile.profilePictureUrl
       });
-      toast.success('Perfil actualizado correctamente.');
+      toast.success('Profile updated successfully.');
     } catch (err) {
-      toast.error('Error al actualizar el perfil.');
+      toast.error('Error updating profile.');
     } finally {
       setSaving(false);
     }
@@ -71,8 +71,8 @@ const TutorSettings = () => {
   return (
     <div className="container animate-fade-in" style={{ maxWidth: '900px', paddingTop: '3rem', paddingBottom: '5rem' }}>
       <div style={{ marginBottom: '3rem' }}>
-        <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>Ajustes de Perfil Profesional</h1>
-        <p style={{ color: 'var(--text-muted)' }}>Gestiona tu información pública, tarifas y materias para atraer a más estudiantes.</p>
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>Professional Profile Settings</h1>
+        <p style={{ color: 'var(--text-muted)' }}>Manage your public information, rates, and subjects to attract more students.</p>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '2rem', alignItems: 'start' }}>
@@ -82,7 +82,7 @@ const TutorSettings = () => {
           
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Nombre Completo</label>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Full Name</label>
               <div style={{ position: 'relative' }}>
                 <User size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                 <input type="text" className="form-input" style={{ paddingLeft: '3rem', opacity: 0.7 }} value={profile.fullName} disabled />
@@ -99,7 +99,7 @@ const TutorSettings = () => {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Tarifa por Hora ($)</label>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Hourly Rate ($)</label>
               <div style={{ position: 'relative' }}>
                 <DollarSign size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                 <input 
@@ -112,7 +112,7 @@ const TutorSettings = () => {
               </div>
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Años de Experiencia</label>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Years of Experience</label>
               <div style={{ position: 'relative' }}>
                 <Briefcase size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                 <input 
@@ -127,14 +127,14 @@ const TutorSettings = () => {
           </div>
 
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Biografía Profesional</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Professional Biography</label>
             <div style={{ position: 'relative' }}>
               <FileText size={18} style={{ position: 'absolute', left: '1rem', top: '1rem', color: 'var(--text-muted)' }} />
               <textarea 
                 className="form-input" 
                 rows={5} 
                 style={{ paddingLeft: '3rem', resize: 'none' }}
-                placeholder="Cuéntales a tus alumnos sobre tu metodología y experiencia..."
+                placeholder="Tell your students about your methodology and experience..."
                 value={profile.bio}
                 onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
               />
@@ -142,7 +142,7 @@ const TutorSettings = () => {
           </div>
 
           <div>
-            <label style={{ display: 'block', marginBottom: '0.8rem', fontWeight: 600 }}>Materias que dictas</label>
+            <label style={{ display: 'block', marginBottom: '0.8rem', fontWeight: 600 }}>Subjects you teach</label>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
               {profile.subjects.map(sub => (
                 <span key={sub} style={{ background: 'rgba(168,85,247,0.1)', color: 'var(--accent-primary)', padding: '0.4rem 0.8rem', borderRadius: '50px', fontSize: '0.85rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -157,7 +157,7 @@ const TutorSettings = () => {
                   type="text" 
                   className="form-input" 
                   style={{ paddingLeft: '3rem' }} 
-                  placeholder="Nueva materia..." 
+                  placeholder="New subject..." 
                   value={newSubject}
                   onChange={(e) => setNewSubject(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addSubject())}
@@ -172,7 +172,7 @@ const TutorSettings = () => {
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
             <button type="submit" disabled={saving} className="btn btn-primary" style={{ padding: '0.8rem 2.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               {saving ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
-              Guardar Cambios
+              Save Changes
             </button>
           </div>
         </form>
@@ -184,20 +184,20 @@ const TutorSettings = () => {
               {profile.profilePictureUrl ? <img src={profile.profilePictureUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : profile.fullName.charAt(0)}
             </div>
             <h3 style={{ marginBottom: '0.25rem' }}>{profile.fullName}</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Tutor Verificado</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Verified Tutor</p>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem' }}>
-               <span style={{ fontSize: '0.8rem', background: '#10b981', color: 'white', padding: '0.2rem 0.6rem', borderRadius: '4px' }}>VERIFICADO</span>
+               <span style={{ fontSize: '0.8rem', background: '#10b981', color: 'white', padding: '0.2rem 0.6rem', borderRadius: '4px' }}>VERIFIED</span>
             </div>
           </div>
 
           <div className="glass-card" style={{ padding: '1.5rem' }}>
             <h4 style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <CheckCircle size={18} color="var(--accent-primary)" /> Estado del Perfil
+              <CheckCircle size={18} color="var(--accent-primary)" /> Profile Status
             </h4>
             <div style={{ height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', marginBottom: '0.5rem', overflow: 'hidden' }}>
               <div style={{ width: '85%', height: '100%', background: 'linear-gradient(to right, #a855f7, #ec4899)' }}></div>
             </div>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Tu perfil está completado al 85%. Sube tus certificados para llegar al 100%.</p>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Your profile is 85% complete. Upload your certificates to reach 100%.</p>
           </div>
         </div>
       </div>

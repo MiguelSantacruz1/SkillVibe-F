@@ -90,49 +90,49 @@ export const authApi = {
     api.get<UserResponseDTO>(`/auth/${id}`),
 };
 
-// ── Tutorias ─────────────────────────────────────────────────────────────────
+// ── Classes ─────────────────────────────────────────────────────────────────
 
-export interface Tutoria {
+export interface TutoringClass {
   id: number;
-  materia: string;
-  descripcion: string;
-  precio: number;
+  subject: string;
+  description: string;
+  price: number;
   fechaHora: string; // ISO string from backend
   meetingLink: string;
-  estado: string; // "PROGRAMADA" | "EN_CURSO" | "FINALIZADA"
+  status: string; // "PROGRAMMED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED"
   tutor: UserResponseDTO;
-  estudiante: UserResponseDTO;
+  student: UserResponseDTO;
 }
 
-export interface CrearTutoriaRequest {
-  materia: string;
-  descripcion: string;
-  precio: number;
+export interface CreateClassRequest {
+  subject: string;
+  description: string;
+  price: number;
   fechaHora: string;
   meetingLink: string;
   tutor: { id: number };
-  estudiante: { id: number };
+  student: { id: number };
 }
 
 export interface BookingRequest {
   tutorId: number;
-  materia: string;
-  descripcion: string;
+  subject: string;
+  description: string;
   fechaHora: string;
 }
 
-export const tutoriasApi = {
+export const classesApi = {
   getMyBoard: (userId: number) =>
-    api.get<Tutoria[]>(`/tutorias/mi-tablero/${userId}`),
+    api.get<TutoringClass[]>(`/tutoringClasses/mi-tablero/${userId}`),
 
-  create: (data: CrearTutoriaRequest) =>
-    api.post<Tutoria>('/tutorias/programar', data),
+  create: (data: CreateClassRequest) =>
+    api.post<TutoringClass>('/tutoringClasses/programar', data),
 
-  reservar: (data: BookingRequest) =>
-    api.post<Tutoria>('/tutorias/reservar', data),
+  book: (data: BookingRequest) =>
+    api.post<TutoringClass>('/tutoringClasses/reservar', data),
 
   finalize: (id: number) =>
-    api.put<Tutoria>(`/tutorias/${id}/finalizar`),
+    api.put<TutoringClass>(`/tutoringClasses/${id}/finalizar`),
 };
 
 // ── Tutors ───────────────────────────────────────────────────────────────────
@@ -148,6 +148,8 @@ export interface TutorProfile {
   yearsOfExperience: number;
   subjects: string[];
   isVerified: boolean;
+  averageRating: number;
+  totalReviews: number;
   credentialsUrl?: string;
 }
 
@@ -182,12 +184,85 @@ export const tutorApi = {
     api.put<TutorProfile>('/tutor/profile', data),
 };
 
-export const pagoApi = {
+export const paymentApi = {
   createCheckout: (amount: number) =>
-    api.post<string>('/pagos/checkout', { amount }),
+    api.post<string>('/payments/checkout', { amount }),
 
-  getHistorial: () =>
-    api.get<any[]>('/pagos/historial'),
+  getHistory: () =>
+    api.get<any[]>('/payments/historial'),
+};
+
+// ── Reviews ──────────────────────────────────────────────────────────────────
+
+export interface CreateReviewDTO {
+  tutoriaId: number;
+  rating: number;
+  comment: string;
+}
+
+export interface ReviewResponseDTO {
+  id: number;
+  tutoriaId: number;
+  tutorId: number;
+  estudianteId: number;
+  estudianteNombre: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
+
+export const reviewApi = {
+  create: (data: CreateReviewDTO) =>
+    api.post<ReviewResponseDTO>('/reviews', data),
+
+  getTutorReviews: (tutorId: number) =>
+    api.get<ReviewResponseDTO[]>(`/reviews/tutor/${tutorId}`),
+};
+
+// ── Notifications ────────────────────────────────────────────────────────────
+
+export interface NotificationDTO {
+  id: number;
+  userId: number;
+  title: string;
+  message: string;
+  isRead: boolean;
+  createdAt: string;
+}
+
+export const notificationApi = {
+  getUnread: () =>
+    api.get<NotificationDTO[]>('/notifications/unread'),
+
+  getHistory: (page: number = 0, size: number = 20) =>
+    api.get<PageResponse<NotificationDTO>>('/notifications/history', { params: { page, size } }),
+
+  markAsRead: (id: number) =>
+    api.put<void>(`/notifications/${id}/read`),
+
+  markAllAsRead: () =>
+    api.put<void>('/notifications/read-all'),
+};
+
+// ── Admin ────────────────────────────────────────────────────────────────────
+
+export interface AdminVerifyDTO {
+  verified: boolean;
+  reason?: string;
+}
+
+export const adminApi = {
+  getPendingTutors: () =>
+    api.get<TutorProfile[]>('/admin/tutors/pending'),
+
+  getVerifiedTutors: () =>
+    api.get<TutorProfile[]>('/admin/tutors/verified'),
+
+  verifyTutor: (id: number, data: AdminVerifyDTO) =>
+    api.put<void>(`/admin/tutors/${id}/verify`, data),
+
+  getSystemStats: () =>
+    api.get<any>('/admin/stats'),
 };
 
 export default api;

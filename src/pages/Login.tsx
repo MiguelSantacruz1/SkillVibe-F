@@ -18,12 +18,12 @@ const Login = () => {
     try {
       const { data } = await authApi.login({ email, password });
       login(data.token, data.user);
-      toast.success('¡Bienvenido de vuelta!');
+      toast.success('Welcome back!');
       navigate('/dashboard');
     } catch (err: unknown) {
       const message =
         (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
-        'Credenciales incorrectas. Verifica tu email y contraseña.';
+        'Invalid credentials. Check your email and password.';
       toast.error(message);
     } finally {
       setLoading(false);
@@ -35,8 +35,8 @@ const Login = () => {
       <div className="auth-container glass-card">
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <LogIn size={48} color="#a855f7" style={{ marginBottom: '1rem' }} />
-          <h2>Bienvenido de vuelta</h2>
-          <p style={{ color: 'var(--text-muted)' }}>Inicia sesión en tu cuenta de SkillVibes</p>
+          <h2>Welcome back</h2>
+          <p style={{ color: 'var(--text-muted)' }}>Login to your SkillVibes account</p>
         </div>
 
         <form onSubmit={handleLogin}>
@@ -48,21 +48,21 @@ const Login = () => {
               className="form-input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="correo@ejemplo.com"
+              placeholder="email@example.com"
               required
               autoComplete="email"
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="password">Contraseña</label>
+            <label className="form-label" htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
               className="form-input"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Tu contraseña"
+              placeholder="Your password"
               required
               autoComplete="current-password"
             />
@@ -74,13 +74,13 @@ const Login = () => {
             style={{ width: '100%', marginTop: '1rem' }}
             disabled={loading}
           >
-            {loading ? 'Autenticando...' : 'Iniciar Sesión'}
+            {loading ? 'Authenticating...' : 'Login'}
           </button>
         </form>
 
         <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-          ¿No tienes cuenta?{' '}
-          <Link to="/register" style={{ color: '#a855f7', textDecoration: 'none' }}>Regístrate aquí</Link>
+          Don't have an account?{' '}
+          <Link to="/register" style={{ color: '#a855f7', textDecoration: 'none' }}>Register here</Link>
         </div>
       </div>
     </div>
