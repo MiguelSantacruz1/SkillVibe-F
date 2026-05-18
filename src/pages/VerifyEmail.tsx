@@ -56,7 +56,7 @@ const VerifyEmail: React.FC = () => {
             }}>
               <CheckCircle2 size={56} color="#10b981" />
             </div>
-            <h2 style={{ marginBottom: '0.75rem' }}>¡Correo Verificado!</h2>
+            <h2 style={{ marginBottom: '0.75rem' }}>Acción Válida</h2>
             <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
               {message} Ya puedes iniciar sesión con tu cuenta.
             </p>
