@@ -18,12 +18,12 @@ const Login = () => {
     try {
       const { data } = await authApi.login({ email, password });
       login(data.token, data.user);
-      toast.success('Welcome back!');
+      toast.success('¡Bienvenido de nuevo!');
       navigate('/dashboard');
     } catch (err: unknown) {
       const message =
         (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
-        'Invalid credentials. Check your email and password.';
+        'Credenciales inválidas. Verifica tu correo y contraseña.';
       toast.error(message);
     } finally {
       setLoading(false);
@@ -35,34 +35,34 @@ const Login = () => {
       <div className="auth-container glass-card">
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <LogIn size={48} color="#a855f7" style={{ marginBottom: '1rem' }} />
-          <h2>Welcome back</h2>
-          <p style={{ color: 'var(--text-muted)' }}>Login to your SkillVibes account</p>
+          <h2>Bienvenido de nuevo</h2>
+          <p style={{ color: 'var(--text-muted)' }}>Inicia sesión en tu cuenta de SkillVibes</p>
         </div>
 
         <form onSubmit={handleLogin}>
           <div className="form-group">
-            <label className="form-label" htmlFor="email">Email</label>
+            <label className="form-label" htmlFor="email">Correo Electrónico</label>
             <input
               type="email"
               id="email"
               className="form-input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="email@example.com"
+              placeholder="correo@ejemplo.com"
               required
               autoComplete="email"
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="password">Password</label>
+            <label className="form-label" htmlFor="password">Contraseña</label>
             <input
               type="password"
               id="password"
               className="form-input"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Your password"
+              placeholder="Tu contraseña"
               required
               autoComplete="current-password"
             />
@@ -74,13 +74,13 @@ const Login = () => {
             style={{ width: '100%', marginTop: '1rem' }}
             disabled={loading}
           >
-            {loading ? 'Authenticating...' : 'Login'}
+            {loading ? 'Autenticando...' : 'Iniciar Sesión'}
           </button>
         </form>
 
         <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-          Don't have an account?{' '}
-          <Link to="/register" style={{ color: '#a855f7', textDecoration: 'none' }}>Register here</Link>
+          ¿No tienes una cuenta?{' '}
+          <Link to="/register" style={{ color: '#a855f7', textDecoration: 'none' }}>Regístrate aquí</Link>
         </div>
       </div>
     </div>

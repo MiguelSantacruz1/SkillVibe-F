@@ -11,7 +11,7 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<'STUDENT' | 'TUTOR'>('STUDENT');
   
-  // Extra fields for Tutor
+  // Campos extra para Tutor
   const [bio, setBio] = useState('');
   const [profilePictureUrl, setProfilePictureUrl] = useState('');
   const [identityCardUrl, setIdentityCardUrl] = useState('');
@@ -40,21 +40,21 @@ const Register = () => {
           subjects: subjectList
         });
         
-        toast.success('Registration successful! Your tutor profile is pending verification.', { duration: 6000 });
+        toast.success('¡Registro exitoso! Tu perfil de tutor está pendiente de verificación.', { duration: 6000 });
         setTimeout(() => navigate('/login'), 4000);
       } else {
-        // 1. Register user
+        // 1. Registrar usuario
         await authApi.register({ fullName, email, password, role });
-        // 2. Auto-login after registration
+        // 2. Auto-login después de registrarse
         const { data } = await authApi.login({ email, password });
         login(data.token, data.user);
-        toast.success('Account created successfully!');
+        toast.success('¡Cuenta creada con éxito!');
         navigate('/dashboard');
       }
     } catch (err: unknown) {
       const message =
         (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
-        'Error registering. Check the data or the email may already be in use.';
+        'Error al registrarse. Verifica los datos o es posible que el correo ya esté en uso.';
       toast.error(message);
     } finally {
       setLoading(false);
@@ -66,13 +66,13 @@ const Register = () => {
       <div className="auth-container glass-card" style={{ maxWidth: '540px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <UserPlus size={48} color="#a855f7" style={{ marginBottom: '1rem' }} />
-          <h2>Create account</h2>
-          <p style={{ color: 'var(--text-muted)' }}>Join the SkillVibes community</p>
+          <h2>Crear cuenta</h2>
+          <p style={{ color: 'var(--text-muted)' }}>Únete a la comunidad de SkillVibes</p>
         </div>
 
         <form onSubmit={handleRegister}>
           <div className="form-group">
-            <label className="form-label">How will you participate?</label>
+            <label className="form-label">¿Cómo vas a participar?</label>
             <div style={{ display: 'flex', gap: '1rem' }}>
               <label style={{
                 flex: 1, padding: '0.75rem', borderRadius: '8px', cursor: 'pointer',
@@ -86,7 +86,7 @@ const Register = () => {
                   onChange={() => setRole('STUDENT')}
                   style={{ display: 'none' }}
                 />
-                🎓 Student
+                🎓 Estudiante
               </label>
               <label style={{
                 flex: 1, padding: '0.75rem', borderRadius: '8px', cursor: 'pointer',
@@ -106,16 +106,16 @@ const Register = () => {
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="fullName">Full Name</label>
+            <label className="form-label" htmlFor="fullName">Nombre Completo</label>
             <input
               type="text" id="fullName" className="form-input"
               value={fullName} onChange={(e) => setFullName(e.target.value)}
-              placeholder="Your full name" required
+              placeholder="Tu nombre completo" required
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="reg-email">Email</label>
+            <label className="form-label" htmlFor="reg-email">Correo Electrónico</label>
             <input
               type="email" id="reg-email" className="form-input"
               value={email} onChange={(e) => setEmail(e.target.value)}
@@ -124,11 +124,11 @@ const Register = () => {
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="reg-password">Password</label>
+            <label className="form-label" htmlFor="reg-password">Contraseña</label>
             <input
               type="password" id="reg-password" className="form-input"
               value={password} onChange={(e) => setPassword(e.target.value)}
-              placeholder="Minimum 6 characters" minLength={6} required autoComplete="new-password"
+              placeholder="Mínimo 6 caracteres" minLength={6} required autoComplete="new-password"
             />
           </div>
 
@@ -137,68 +137,68 @@ const Register = () => {
               background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)',
               padding: '1.25rem', borderRadius: '8px', marginBottom: '1.5rem', marginTop: '0.5rem'
             }}>
-              <h4 style={{ marginBottom: '1rem', color: '#a855f7' }}>📋 Professional Profile</h4>
+              <h4 style={{ marginBottom: '1rem', color: '#a855f7' }}>📋 Perfil Profesional</h4>
               
               <div className="form-group">
-                <label className="form-label" htmlFor="bio">Professional Biography (Min. 50 characters)</label>
+                <label className="form-label" htmlFor="bio">Biografía Profesional (Mín. 50 caracteres)</label>
                 <textarea
                   id="bio" className="form-input" rows={3}
                   value={bio} onChange={(e) => setBio(e.target.value)}
-                  placeholder="Tell us about yourself, your methodology, and why students should choose you."
+                  placeholder="Cuéntanos sobre ti, tu metodología y por qué los estudiantes deberían elegirte."
                   required={role === 'TUTOR'} minLength={50}
                 />
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div className="form-group">
-                  <label className="form-label" htmlFor="hourlyRate">Hourly Rate ($)</label>
+                  <label className="form-label" htmlFor="hourlyRate">Tarifa por Hora ($ COP)</label>
                   <input
                     type="number" id="hourlyRate" className="form-input"
                     value={hourlyRate} onChange={(e) => setHourlyRate(e.target.value ? Number(e.target.value) : '')}
-                    placeholder="Ex. 15.50" required={role === 'TUTOR'} min="1" step="0.1"
+                    placeholder="Ej. 15500" required={role === 'TUTOR'} min="1" step="0.1"
                   />
                 </div>
                 <div className="form-group">
-                  <label className="form-label" htmlFor="yearsOfExperience">Years of Exp.</label>
+                  <label className="form-label" htmlFor="yearsOfExperience">Años de Exp.</label>
                   <input
                     type="number" id="yearsOfExperience" className="form-input"
                     value={yearsOfExperience} onChange={(e) => setYearsOfExperience(e.target.value ? Number(e.target.value) : '')}
-                    placeholder="Ex. 3" required={role === 'TUTOR'} min="0"
+                    placeholder="Ej. 3" required={role === 'TUTOR'} min="0"
                   />
                 </div>
               </div>
 
               <div className="form-group">
-                <label className="form-label" htmlFor="subjects">Subjects (comma separated)</label>
+                <label className="form-label" htmlFor="subjects">Materias (separadas por coma)</label>
                 <input
                   type="text" id="subjects" className="form-input"
                   value={subjects} onChange={(e) => setSubjects(e.target.value)}
-                  placeholder="Ex. Mathematics, Physics, Programming" required={role === 'TUTOR'}
+                  placeholder="Ej. Matemáticas, Física, Programación" required={role === 'TUTOR'}
                 />
               </div>
 
               <div className="form-group">
-                <label className="form-label" htmlFor="profilePictureUrl">Profile Picture URL</label>
+                <label className="form-label" htmlFor="profilePictureUrl">URL de Foto de Perfil</label>
                 <input
                   type="url" id="profilePictureUrl" className="form-input"
                   value={profilePictureUrl} onChange={(e) => setProfilePictureUrl(e.target.value)}
-                  placeholder="https://example.com/mypic.jpg" required={role === 'TUTOR'}
+                  placeholder="https://ejemplo.com/mifoto.jpg" required={role === 'TUTOR'}
                 />
               </div>
               <div className="form-group">
-                <label className="form-label" htmlFor="identityCardUrl">Identity Card URL</label>
+                <label className="form-label" htmlFor="identityCardUrl">URL de Documento de Identidad</label>
                 <input
                   type="url" id="identityCardUrl" className="form-input"
                   value={identityCardUrl} onChange={(e) => setIdentityCardUrl(e.target.value)}
-                  placeholder="Document for validation" required={role === 'TUTOR'}
+                  placeholder="Documento para validación" required={role === 'TUTOR'}
                 />
               </div>
               <div className="form-group">
-                <label className="form-label" htmlFor="degreeUrl">Degree or Academic Support URL</label>
+                <label className="form-label" htmlFor="degreeUrl">URL de Título o Soporte Académico</label>
                 <input
                   type="url" id="degreeUrl" className="form-input"
                   value={degreeUrl} onChange={(e) => setDegreeUrl(e.target.value)}
-                  placeholder="Study certificate" required={role === 'TUTOR'}
+                  placeholder="Certificado de estudios" required={role === 'TUTOR'}
                 />
               </div>
             </div>
@@ -210,13 +210,13 @@ const Register = () => {
             style={{ width: '100%', marginTop: '0.5rem' }}
             disabled={loading}
           >
-            {loading ? 'Processing...' : 'Register'}
+            {loading ? 'Procesando...' : 'Registrarse'}
           </button>
         </form>
 
         <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-          Already have an account?{' '}
-          <Link to="/login" style={{ color: '#a855f7', textDecoration: 'none' }}>Login</Link>
+          ¿Ya tienes una cuenta?{' '}
+          <Link to="/login" style={{ color: '#a855f7', textDecoration: 'none' }}>Inicia Sesión</Link>
         </div>
       </div>
     </div>

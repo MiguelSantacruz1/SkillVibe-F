@@ -21,7 +21,7 @@ const AdminDashboard: React.FC = () => {
       setVerifiedTutors(verifiedRes.data);
       setStats(statsRes.data);
     } catch (error) {
-      toast.error('Error loading admin dashboard');
+      toast.error('Error al cargar el panel de administrador');
     } finally {
       setLoading(false);
     }
@@ -34,20 +34,20 @@ const AdminDashboard: React.FC = () => {
   const handleVerify = async (id: number, verified: boolean) => {
     try {
       await adminApi.verifyTutor(id, { verified });
-      toast.success(`Tutor ${verified ? 'approved' : 'rejected'} successfully`);
+      toast.success(`Tutor ${verified ? 'aprobado' : 'rechazado'} con éxito`);
       fetchData(); // Refresh lists
     } catch (error) {
-      toast.error('Error updating tutor status');
+      toast.error('Error al actualizar el estado del tutor');
     }
   };
 
-  if (loading) return <div className="text-center py-20">Loading dashboard...</div>;
+  if (loading) return <div className="text-center py-20">Cargando panel...</div>;
 
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-8">
+    <div className="max-w-7xl mx-auto p-6 space-y-8 animate-fade-in">
       <div className="flex items-center gap-3 mb-8">
         <Shield className="w-8 h-8 text-indigo-600" />
-        <h1 className="text-3xl font-bold text-slate-800">Admin Dashboard</h1>
+        <h1 className="text-3xl font-bold text-slate-800">Panel de Administración</h1>
       </div>
 
       {/* Stats Cards */}
@@ -57,7 +57,7 @@ const AdminDashboard: React.FC = () => {
             <Users className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-500">Active Users</p>
+            <p className="text-sm font-medium text-slate-500">Usuarios Activos</p>
             <p className="text-2xl font-bold text-slate-800">{stats?.totalUsers || 0}</p>
           </div>
         </div>
@@ -66,7 +66,7 @@ const AdminDashboard: React.FC = () => {
             <Check className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-500">Verified Tutors</p>
+            <p className="text-sm font-medium text-slate-500">Tutores Verificados</p>
             <p className="text-2xl font-bold text-slate-800">{verifiedTutors.length}</p>
           </div>
         </div>
@@ -75,7 +75,7 @@ const AdminDashboard: React.FC = () => {
             <BookOpen className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-500">Registered Classes</p>
+            <p className="text-sm font-medium text-slate-500">Clases Registradas</p>
             <p className="text-2xl font-bold text-slate-800">{stats?.totalClasses || 0}</p>
           </div>
         </div>
@@ -85,7 +85,7 @@ const AdminDashboard: React.FC = () => {
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div className="p-6 border-b border-slate-200">
           <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-            Pending Requests
+            Solicitudes Pendientes
             <span className="bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
               {pendingTutors.length}
             </span>
@@ -96,17 +96,17 @@ const AdminDashboard: React.FC = () => {
             <thead className="bg-slate-50 text-slate-500 text-xs uppercase font-semibold">
               <tr>
                 <th className="px-6 py-4">Tutor</th>
-                <th className="px-6 py-4">Rate / Exp</th>
-                <th className="px-6 py-4">Subjects</th>
-                <th className="px-6 py-4">Documents</th>
-                <th className="px-6 py-4 text-right">Actions</th>
+                <th className="px-6 py-4">Tarifa / Exp</th>
+                <th className="px-6 py-4">Materias</th>
+                <th className="px-6 py-4">Documentos</th>
+                <th className="px-6 py-4 text-right">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
               {pendingTutors.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
-                    No pending requests.
+                    No hay solicitudes pendientes.
                   </td>
                 </tr>
               ) : (
@@ -122,8 +122,8 @@ const AdminDashboard: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="font-medium text-slate-900">${tutor.hourlyRate}/h</p>
-                      <p className="text-xs text-slate-500">{tutor.yearsOfExperience} years exp.</p>
+                      <p className="font-medium text-slate-900">${tutor.hourlyRate.toLocaleString('es-CO')}/h</p>
+                      <p className="text-xs text-slate-500">{tutor.yearsOfExperience} años de exp.</p>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-wrap gap-1">
@@ -136,7 +136,7 @@ const AdminDashboard: React.FC = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-1 text-xs">
-                        {tutor.credentialsUrl && <a href={tutor.credentialsUrl} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">ID Document</a>}
+                        {tutor.credentialsUrl && <a href={tutor.credentialsUrl} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">Documento de Identidad</a>}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right">
@@ -144,14 +144,14 @@ const AdminDashboard: React.FC = () => {
                         <button
                           onClick={() => handleVerify(tutor.userId, true)}
                           className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                          title="Approve"
+                          title="Aprobar"
                         >
                           <Check className="w-5 h-5" />
                         </button>
                         <button
                           onClick={() => handleVerify(tutor.userId, false)}
                           className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                          title="Reject"
+                          title="Rechazar"
                         >
                           <X className="w-5 h-5" />
                         </button>
