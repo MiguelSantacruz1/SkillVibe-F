@@ -40,16 +40,12 @@ const Register = () => {
           subjects: subjectList
         });
         
-        toast.success('¡Registro exitoso! Tu perfil de tutor está pendiente de verificación.', { duration: 6000 });
+        toast.success('¡Registro exitoso! Se ha enviado un mensaje a tu correo para su verificación y tu perfil de tutor está pendiente de revisión.', { duration: 8000 });
         setTimeout(() => navigate('/login'), 4000);
       } else {
-        // 1. Registrar usuario
         await authApi.register({ fullName, email, password, role });
-        // 2. Auto-login después de registrarse
-        const { data } = await authApi.login({ email, password });
-        login(data.token, data.user);
-        toast.success('¡Cuenta creada con éxito!');
-        navigate('/dashboard');
+        toast.success('¡Registro exitoso! Se ha enviado un mensaje a tu correo para su verificación. Revisa tu bandeja de entrada o spam.', { duration: 6000 });
+        navigate('/login');
       }
     } catch (err: unknown) {
       const message =
