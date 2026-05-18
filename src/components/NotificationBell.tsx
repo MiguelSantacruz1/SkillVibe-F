@@ -22,7 +22,7 @@ const NotificationBell: React.FC = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-2 rounded-full hover:bg-white/10 transition-colors focus:outline-none"
-        aria-label="Notifications"
+        aria-label="Notificaciones"
       >
         <Bell className="w-6 h-6 text-slate-700 dark:text-slate-300" />
         {unreadCount > 0 && (
@@ -35,14 +35,14 @@ const NotificationBell: React.FC = () => {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden z-50">
           <div className="p-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
-            <h3 className="font-semibold text-slate-800 dark:text-white">Notifications</h3>
+            <h3 className="font-semibold text-slate-800 dark:text-white">Notificaciones</h3>
             {unreadCount > 0 && (
               <button
                 onClick={() => markAllAsRead()}
                 className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 flex items-center gap-1 font-medium transition-colors"
               >
                 <Check className="w-3 h-3" />
-                Mark all as read
+                Marcar todas como leídas
               </button>
             )}
           </div>
@@ -51,7 +51,7 @@ const NotificationBell: React.FC = () => {
             {notifications.length === 0 ? (
               <div className="p-8 text-center text-slate-500 dark:text-slate-400">
                 <Bell className="w-8 h-8 mx-auto mb-3 opacity-20" />
-                <p className="text-sm">You have no notifications</p>
+                <p className="text-sm">No tienes notificaciones</p>
               </div>
             ) : (
               <div className="divide-y divide-slate-100 dark:divide-slate-700/50">
@@ -71,7 +71,7 @@ const NotificationBell: React.FC = () => {
                           {notif.message}
                         </p>
                         <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">
-                          {new Date(notif.createdAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}
+                          {new Date(notif.createdAt).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' })}
                         </p>
                       </div>
                       {!notif.isRead && (
@@ -81,7 +81,7 @@ const NotificationBell: React.FC = () => {
                             markAsRead(notif.id);
                           }}
                           className="w-2 h-2 mt-1.5 bg-indigo-600 rounded-full flex-shrink-0"
-                          title="Mark as read"
+                          title="Marcar como leída"
                         />
                       )}
                     </div>

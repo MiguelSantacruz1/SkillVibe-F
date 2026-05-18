@@ -32,13 +32,13 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
         fechaHora
       });
       setSuccess(true);
-      toast.success('Booking confirmed!');
+      toast.success('¡Reserva confirmada!');
       setTimeout(() => {
         onSuccess();
         onClose();
       }, 2000);
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Could not complete booking. Check your balance.');
+      toast.error(err.response?.data?.message || 'No se pudo completar la reserva. Verifica tu saldo.');
     } finally {
       setLoading(false);
     }
@@ -71,20 +71,20 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
             }}>
               <CheckCircle2 size={48} color="#10b981" />
             </div>
-            <h2 style={{ marginBottom: '0.5rem' }}>Booking Confirmed!</h2>
-            <p style={{ color: 'var(--text-muted)' }}>Your class with {tutor.fullName} has been scheduled successfully.</p>
+            <h2 style={{ marginBottom: '0.5rem' }}>¡Reserva Confirmada!</h2>
+            <p style={{ color: 'var(--text-muted)' }}>Tu clase con {tutor.fullName} ha sido programada con éxito.</p>
           </div>
         ) : (
           <>
             <div style={{ marginBottom: '2rem' }}>
-              <h2 style={{ marginBottom: '0.5rem' }}>Book Class</h2>
-              <p style={{ color: 'var(--text-muted)' }}>You are about to book a session with <strong>{tutor.fullName}</strong></p>
+              <h2 style={{ marginBottom: '0.5rem' }}>Reservar Clase</h2>
+              <p style={{ color: 'var(--text-muted)' }}>Estás a punto de reservar una sesión con <strong>{tutor.fullName}</strong></p>
             </div>
 
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Date</label>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Fecha</label>
                   <div style={{ position: 'relative' }}>
                     <Calendar size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                     <input 
@@ -98,7 +98,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Time</label>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Hora</label>
                   <div style={{ position: 'relative' }}>
                     <Clock size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                     <input 
@@ -114,7 +114,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Subject</label>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Materia</label>
                 <select 
                   className="form-input"
                   value={formData.subject}
@@ -125,11 +125,11 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>What do you want to learn?</label>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>¿Qué deseas aprender?</label>
                 <textarea 
                   className="form-input" 
                   rows={3} 
-                  placeholder="Briefly describe your questions or topics..."
+                  placeholder="Describe brevemente tus dudas o temas a tratar..."
                   value={formData.description}
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
                   style={{ resize: 'none' }}
@@ -143,10 +143,10 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <DollarSign size={18} color="#10b981" />
-                  <span style={{ fontWeight: 600 }}>Total to pay:</span>
+                  <span style={{ fontWeight: 600 }}>Total a pagar ($ COP):</span>
                 </div>
                 <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#10b981' }}>
-                  ${tutor.hourlyRate.toFixed(2)}
+                  ${tutor.hourlyRate.toLocaleString('es-CO')}
                 </span>
               </div>
 
@@ -156,7 +156,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
                 disabled={loading}
                 style={{ padding: '1rem', display: 'flex', justifyContent: 'center', gap: '0.5rem', alignItems: 'center' }}
               >
-                {loading ? <Loader2 className="animate-spin" size={20} /> : 'Confirm Booking'}
+                {loading ? <Loader2 className="animate-spin" size={20} /> : 'Confirmar Reserva'}
               </button>
             </form>
           </>

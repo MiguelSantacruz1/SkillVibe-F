@@ -22,18 +22,18 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ tutoringClassId, tutorName, i
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (rating === 0) {
-      toast.error('Please select a rating');
+      toast.error('Por favor selecciona una calificación');
       return;
     }
 
     setIsSubmitting(true);
     try {
       await reviewApi.create({ tutoriaId: tutoringClassId, rating, comment });
-      toast.success('Review submitted successfully!');
+      toast.success('¡Reseña enviada con éxito!');
       onSuccess();
       onClose();
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Error submitting review');
+      toast.error(error.response?.data?.message || 'Error al enviar la reseña');
     } finally {
       setIsSubmitting(false);
     }
@@ -44,7 +44,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ tutoringClassId, tutorName, i
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-fade-in-up">
         <div className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-700">
           <h2 className="text-xl font-bold text-slate-800 dark:text-white">
-            Rate {tutorName}
+            Calificar a {tutorName}
           </h2>
           <button
             onClick={onClose}
@@ -57,7 +57,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ tutoringClassId, tutorName, i
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div className="space-y-3">
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 text-center">
-              How would you rate your class?
+              ¿Cómo calificarías tu clase?
             </label>
             <div className="flex justify-center gap-2">
               {[1, 2, 3, 4, 5].map((star) => (
@@ -83,7 +83,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ tutoringClassId, tutorName, i
 
           <div className="space-y-2">
             <label htmlFor="comment" className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-              Comment (Optional)
+              Comentario (Opcional)
             </label>
             <textarea
               id="comment"
@@ -91,7 +91,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ tutoringClassId, tutorName, i
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow resize-none"
-              placeholder="What did you think of the class?..."
+              placeholder="¿Qué te pareció la clase?..."
             />
           </div>
 
@@ -101,14 +101,14 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ tutoringClassId, tutorName, i
               onClick={onClose}
               className="flex-1 px-4 py-2 text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl font-medium transition-colors"
             >
-              Cancel
+              Cancelar
             </button>
             <button
               type="submit"
               disabled={isSubmitting || rating === 0}
               className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? 'Submitting...' : 'Submit Review'}
+              {isSubmitting ? 'Enviando...' : 'Enviar Reseña'}
             </button>
           </div>
         </form>

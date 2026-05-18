@@ -30,22 +30,22 @@ function NavBar() {
         SkillVibes
       </Link>
       <div className="nav-links">
-        <Link to="/" className="nav-link">Home</Link>
+        <Link to="/" className="nav-link">Inicio</Link>
         {isAuthenticated ? (
           <>
-            <Link to="/dashboard" className="nav-link">My Classes</Link>
+            <Link to="/dashboard" className="nav-link">Mis Clases</Link>
             {user?.role === 'ROLE_STUDENT' && (
               <Link to="/wallet" className="nav-link" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--accent-primary)', fontWeight: 600 }}>
                 <span style={{ background: 'rgba(168,85,247,0.1)', padding: '0.2rem 0.6rem', borderRadius: '50px' }}>
-                  ${user?.balance?.toFixed(2)}
+                  ${user?.balance?.toLocaleString('es-CO')}
                 </span>
               </Link>
             )}
             {user?.role === 'ROLE_TUTOR' && (
-              <Link to="/tutor/settings" className="nav-link">Profile Settings</Link>
+              <Link to="/tutor/settings" className="nav-link">Configuración de Perfil</Link>
             )}
             {user?.role === 'ROLE_ADMIN' && (
-              <Link to="/admin" className="nav-link">Admin Dashboard</Link>
+              <Link to="/admin" className="nav-link">Panel de Admin</Link>
             )}
             <NotificationBell />
             <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
@@ -56,14 +56,14 @@ function NavBar() {
               className="btn"
               style={{ padding: '0.5rem 1rem', border: '1px solid var(--border-color)', background: 'transparent', color: 'var(--text-color)' }}
             >
-              Logout
+              Cerrar Sesión
             </button>
           </>
         ) : (
           <>
-            <Link to="/login" className="nav-link">Login</Link>
+            <Link to="/login" className="nav-link">Iniciar Sesión</Link>
             <Link to="/register" className="btn btn-primary" style={{ padding: '0.5rem 1rem' }}>
-              Register
+              Registrarse
             </Link>
           </>
         )}
