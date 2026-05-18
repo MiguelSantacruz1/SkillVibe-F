@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
-import { Lock, Eye, EyeOff, CheckCircle2, Loader2 } from 'lucide-react';
+import { Lock, Eye, EyeOff, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 import api from '../services/api';
 
 const ResetPassword: React.FC = () => {
@@ -15,6 +15,7 @@ const ResetPassword: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [tokenInvalid, setTokenInvalid] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,21 +36,29 @@ const ResetPassword: React.FC = () => {
       setSuccess(true);
       setTimeout(() => navigate('/login'), 3000);
     } catch (err: any) {
+      setTokenInvalid(true);
       setError(err.response?.data?.message || 'El enlace expiró o no es válido. Solicita uno nuevo.');
     } finally {
       setLoading(false);
     }
   };
 
-  if (!token) {
+  if (!token || tokenInvalid) {
     return (
-      <div style={{ minHeight: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <div className="glass-card" style={{ padding: '3rem', textAlign: 'center', maxWidth: '460px' }}>
-          <h2 style={{ marginBottom: '1rem' }}>Enlace inválido</h2>
+      <div style={{ minHeight: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2rem' }}>
+        <div className="glass-card animate-scale-in" style={{ maxWidth: '460px', width: '100%', padding: '3rem', textAlign: 'center', border: '1px solid rgba(239,68,68,0.2)' }}>
+          <div style={{
+            width: '96px', height: '96px', borderRadius: '50%',
+            background: 'rgba(239,68,68,0.1)', display: 'flex',
+            justifyContent: 'center', alignItems: 'center', margin: '0 auto 1.5rem'
+          }}>
+            <XCircle size={56} color="#ef4444" />
+          </div>
+          <h2 style={{ marginBottom: '1rem' }}>Enlace Inválido</h2>
           <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
-            Este enlace de recuperación no es válido.
+            {error || 'Este enlace de recuperación expiró o no es válido.'}
           </p>
-          <Link to="/forgot-password" className="btn btn-primary" style={{ textDecoration: 'none', padding: '0.9rem 2rem' }}>
+          <Link to="/forgot-password" className="btn btn-primary" style={{ display: 'block', padding: '0.9rem', textDecoration: 'none' }}>
             Solicitar nuevo enlace
           </Link>
         </div>
@@ -75,7 +84,7 @@ const ResetPassword: React.FC = () => {
             }}>
               <CheckCircle2 size={56} color="#10b981" />
             </div>
-            <h2 style={{ marginBottom: '0.75rem' }}>¡Contraseña restablecida!</h2>
+            <h2 style={{ marginBottom: '0.75rem' }}>Acción Válida</h2>
             <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
               Tu contraseña ha sido cambiada con éxito. Serás redirigido al inicio de sesión en unos segundos...
             </p>
