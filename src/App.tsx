@@ -9,6 +9,9 @@ import VirtualClassroom from './pages/VirtualClassroom';
 import TutorSettings from './pages/TutorSettings';
 import AddBalance from './pages/AddBalance';
 import AdminDashboard from './pages/AdminDashboard';
+import VerifyEmail from './pages/VerifyEmail';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import { Toaster } from 'react-hot-toast';
 import { NotificationProvider } from './context/NotificationContext';
 import NotificationBell from './components/NotificationBell';
@@ -91,6 +94,9 @@ function App() {
                 <Route path="/tutor/settings" element={<TutorSettings />} />
                 <Route path="/wallet" element={<AddBalance />} />
                 <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/verify-email" element={<VerifyEmail />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
               </Routes>
             </main>
           </div>
