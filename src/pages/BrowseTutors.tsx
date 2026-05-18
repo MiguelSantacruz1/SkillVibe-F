@@ -75,10 +75,10 @@ const BrowseTutors = () => {
     <div className="container animate-fade-in" style={{ paddingTop: '2rem' }}>
       <div style={{ marginBottom: '3rem', textAlign: 'center' }}>
         <h1 style={{ fontSize: '3rem', marginBottom: '1rem', background: 'linear-gradient(to right, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-          Find Your Ideal Tutor
+          Encuentra tu Tutor Ideal
         </h1>
         <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem', maxWidth: '700px', margin: '0 auto' }}>
-          Verified experts ready to help you master any skill.
+          Expertos verificados listos para ayudarte a dominar cualquier habilidad.
         </p>
       </div>
 
@@ -90,7 +90,7 @@ const BrowseTutors = () => {
           id="mobile-filter-btn"
           onClick={() => setShowFilters(!showFilters)}
         >
-          <SlidersHorizontal size={18} /> {showFilters ? 'Hide Filters' : 'Show Filters'}
+          <SlidersHorizontal size={18} /> {showFilters ? 'Ocultar Filtros' : 'Mostrar Filtros'}
         </button>
 
         {/* Sidebar Filters */}
@@ -103,50 +103,50 @@ const BrowseTutors = () => {
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
             <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Filter size={20} color="#a855f7" /> Filters
+              <Filter size={20} color="#a855f7" /> Filtros
             </h3>
             <button onClick={clearFilters} style={{ background: 'transparent', border: 'none', color: '#ec4899', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 600 }}>
-              Clear
+              Limpiar
             </button>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Subject</label>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Materia</label>
               <select 
                 name="subject" 
                 className="form-input" 
                 value={filters.subject || ''} 
                 onChange={handleFilterChange}
               >
-                <option value="">All subjects</option>
-                <option value="Programación">Programming</option>
-                <option value="Matemáticas">Mathematics</option>
-                <option value="Inglés">English</option>
-                <option value="Diseño UI/UX">UI/UX Design</option>
-                <option value="Física">Physics</option>
+                <option value="">Todas las materias</option>
+                <option value="Programación">Programación</option>
+                <option value="Matemáticas">Matemáticas</option>
+                <option value="Inglés">Inglés</option>
+                <option value="Diseño UI/UX">Diseño UI/UX</option>
+                <option value="Física">Física</option>
               </select>
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Max Price ($/h)</label>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Precio Máximo ($ COP/h)</label>
               <input 
                 type="number" 
                 name="maxPrice" 
                 className="form-input" 
-                placeholder="Ex: 50" 
+                placeholder="Ej: 50000" 
                 value={filters.maxPrice || ''} 
                 onChange={handleFilterChange}
               />
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Min Years of Experience</label>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Años Mínimos de Experiencia</label>
               <input 
                 type="number" 
                 name="minExperience" 
                 className="form-input" 
-                placeholder="Ex: 2" 
+                placeholder="Ej: 2" 
                 value={filters.minExperience || ''} 
                 onChange={handleFilterChange}
               />
@@ -161,7 +161,7 @@ const BrowseTutors = () => {
                 onChange={handleFilterChange}
                 style={{ width: '18px', height: '18px', cursor: 'pointer' }}
               />
-              <label htmlFor="onlyVerified" style={{ fontSize: '0.9rem', cursor: 'pointer' }}>Only verified tutors</label>
+              <label htmlFor="onlyVerified" style={{ fontSize: '0.9rem', cursor: 'pointer' }}>Solo tutores verificados</label>
             </div>
           </div>
         </div>
@@ -175,7 +175,7 @@ const BrowseTutors = () => {
               type="text" 
               name="query"
               className="form-input" 
-              placeholder="Search by name or keywords..." 
+              placeholder="Buscar por nombre o palabras clave..." 
               style={{ border: 'none', padding: '0.5rem' }}
               value={filters.query}
               onChange={handleFilterChange}
@@ -197,9 +197,9 @@ const BrowseTutors = () => {
           {!loading && tutors.length === 0 && (
             <div style={{ textAlign: 'center', padding: '5rem 2rem' }}>
               <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🔍</div>
-              <h3>We couldn't find any tutors with those filters</h3>
-              <p style={{ color: 'var(--text-muted)' }}>Try adjusting your search criteria or clear the filters.</p>
-              <button className="btn" onClick={clearFilters} style={{ marginTop: '1rem' }}>Clear Filters</button>
+              <h3>No pudimos encontrar tutores con esos filtros</h3>
+              <p style={{ color: 'var(--text-muted)' }}>Intenta ajustar tus criterios de búsqueda o limpiar los filtros.</p>
+              <button className="btn" onClick={clearFilters} style={{ marginTop: '1rem' }}>Limpiar Filtros</button>
             </div>
           )}
 
@@ -226,7 +226,7 @@ const BrowseTutors = () => {
                   >
                     <ChevronLeft size={20} />
                   </button>
-                  <span style={{ fontWeight: 600 }}>Page {page + 1} of {totalPages}</span>
+                  <span style={{ fontWeight: 600 }}>Página {page + 1} de {totalPages}</span>
                   <button 
                     className="btn" 
                     disabled={page === totalPages - 1}
