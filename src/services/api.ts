@@ -186,7 +186,7 @@ export const tutorApi = {
 
 export const paymentApi = {
   createCheckout: (amount: number) =>
-    api.post<string>('/payments/checkout', { amount }),
+    api.post<string>('/payments/simulate', { amount }),
 
   getHistory: () =>
     api.get<any[]>('/payments/historial'),
