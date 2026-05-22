@@ -1,10 +1,12 @@
 import axios from 'axios';
 
-const baseURL = import.meta.env.VITE_API_URL || 'https://skillvibe-b-production.up.railway.app';
+const rawBaseURL = import.meta.env.VITE_API_URL || 'https://skillvibe-b-production.up.railway.app';
+// Quitar slash final si lo tiene para evitar errores de doble slash (//api)
+const cleanBaseURL = rawBaseURL.replace(/\/+$/, '');
 
 // Base URL from env variable (for Vercel) or fallback to production backend
 const api = axios.create({
-  baseURL: baseURL.endsWith('/api') ? baseURL : `${baseURL}/api`,
+  baseURL: cleanBaseURL.endsWith('/api') ? cleanBaseURL : `${cleanBaseURL}/api`,
   headers: {
     'Content-Type': 'application/json',
   },
