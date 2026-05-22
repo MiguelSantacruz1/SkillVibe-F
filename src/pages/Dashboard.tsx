@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, Calendar, Clock, User, Filter, LogOut, BookOpen, DollarSign, Star, Code, Globe, PenTool, Sparkles, TrendingUp, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { classesApi, type TutoringClass } from '../services/api';
+import { classesApi, tutorApi, type TutoringClass, type TutorProfile } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ReviewModal from '../components/ReviewModal';
 
@@ -10,6 +10,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const [classes, setClasses] = useState<TutoringClass[]>([]);
+  const [profile, setProfile] = useState<TutorProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -27,6 +28,10 @@ const Dashboard = () => {
         setLoading(true);
         const { data } = await classesApi.getMyBoard(user.id);
         setClasses(data);
+        if (user.role === 'TUTOR') {
+          const profileRes = await tutorApi.getMyProfile();
+          setProfile(profileRes.data);
+        }
       } catch {
         setError('No se pudo cargar el tablero. Verifica si el backend está en ejecución.');
       } finally {
@@ -309,13 +314,38 @@ const Dashboard = () => {
             )}
 
             {filtered.length === 0 && user?.role === 'TUTOR' && (
-              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '5rem 2rem', background: 'rgba(168,85,247,0.05)', borderRadius: '16px', border: '1px dashed rgba(168,85,247,0.3)' }}>
-                <BookOpen size={64} color="#a855f7" style={{ margin: '0 auto 1.5rem auto', opacity: 0.8 }} />
-                <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Tu agenda está libre</h2>
-                <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', maxWidth: '500px', margin: '0 auto 2rem auto' }}>
-                  Aún no tienes clases programadas con estudiantes. Optimiza tu perfil y prepárate para compartir tu conocimiento.
-                </p>
-                <button className="btn btn-primary" style={{ padding: '0.75rem 1.5rem' }} onClick={() => navigate('/settings')}>Completar mi perfil</button>
+              <div style={{ gridColumn: '1 / -1' }}>
+                <div style={{ textAlign: 'center', padding: '5rem 2rem', background: 'rgba(168,85,247,0.05)', borderRadius: '16px', border: '1px dashed rgba(168,85,247,0.3)', marginBottom: '2rem' }}>
+                  <BookOpen size={64} color="#a855f7" style={{ margin: '0 auto 1.5rem auto', opacity: 0.8 }} />
+                  <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Tu agenda está libre</h2>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', maxWidth: '500px', margin: '0 auto 2rem auto' }}>
+                    Aún no tienes clases programadas con estudiantes. Optimiza tu perfil y prepárate para compartir tu conocimiento.
+                  </p>
+                  <button className="btn btn-primary" style={{ padding: '0.75rem 1.5rem' }} onClick={() => navigate('/tutor/settings')}>Completar mi perfil</button>
+                </div>
+
+                {profile && profile.subjects && profile.subjects.length > 0 && (
+                  <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
+                    <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
+                      <Star size={24} color="#a855f7" /> Clases que ofreces
+                    </h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+                      {profile.subjects.map((sub, idx) => (
+                        <div key={idx} className="glass-card" style={{
+                          padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', cursor: 'pointer',
+                          transition: 'all 0.3s ease', border: '1px solid rgba(255,255,255,0.05)'
+                        }}
+                          onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                          onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
+                          <div style={{ padding: '1rem', borderRadius: '12px', background: 'rgba(168,85,247,0.15)' }}>
+                            <BookOpen size={24} color="#a855f7" />
+                          </div>
+                          <span style={{ fontWeight: 600 }}>{sub}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
