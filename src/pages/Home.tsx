@@ -10,6 +10,20 @@ const Home = () => {
 
       {/* ── Hero ────────────────────────────────────────────────── */}
       <section className="hero">
+        {isAuthenticated && user && (
+          <h2 style={{
+            fontSize: '2.5rem',
+            marginBottom: '1.5rem',
+            fontWeight: 700,
+            background: 'linear-gradient(to right, #cb87ceff, #ffffffff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            animation: 'fadeIn 0.5s ease-out'
+          }}>
+            Bienvenido de nuevo, {user.fullName}
+          </h2>
+        )}
+
         <div style={{
           display: 'inline-block', background: 'rgba(168,85,247,0.15)',
           border: '1px solid rgba(168,85,247,0.3)', borderRadius: '9999px',
@@ -31,9 +45,6 @@ const Home = () => {
             <Link to="/dashboard" className="btn btn-primary" style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}>
               Mis Clases <ArrowRight size={20} style={{ marginLeft: '0.5rem' }} />
             </Link>
-            <p style={{ color: 'var(--text-muted)', alignSelf: 'center' }}>
-              Bienvenido de nuevo, <strong style={{ color: '#c084fc' }}>{user?.fullName}</strong>
-            </p>
           </div>
         ) : (
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
