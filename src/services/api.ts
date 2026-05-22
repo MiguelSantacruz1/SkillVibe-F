@@ -1,8 +1,10 @@
 import axios from 'axios';
 
+const baseURL = import.meta.env.VITE_API_URL || 'https://skillvibe-b-production.up.railway.app';
+
 // Base URL from env variable (for Vercel) or fallback to production backend
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://skillvibe-b-production.up.railway.app',
+  baseURL: baseURL.endsWith('/api') ? baseURL : `${baseURL}/api`,
   headers: {
     'Content-Type': 'application/json',
   },
