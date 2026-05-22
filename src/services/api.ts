@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// Base URL from env variable (for Vercel) or proxied via vite.config.ts (for local)
+// Base URL from env variable (for Vercel) or fallback to production backend
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
+  baseURL: import.meta.env.VITE_API_URL || 'https://skillvibe-b-production.up.railway.app',
   headers: {
     'Content-Type': 'application/json',
   },

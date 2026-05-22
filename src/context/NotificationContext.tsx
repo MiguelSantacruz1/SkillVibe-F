@@ -45,7 +45,8 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     fetchUnread();
 
     const token = localStorage.getItem('skillvibes_token');
-    const socket = new SockJS('http://localhost:8080/ws');
+    const baseUrl = import.meta.env.VITE_API_URL || 'https://skillvibe-b-production.up.railway.app';
+    const socket = new SockJS(`${baseUrl}/ws`);
     const client = new Client({
       webSocketFactory: () => socket,
       connectHeaders: {
