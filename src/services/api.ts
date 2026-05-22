@@ -1,6 +1,13 @@
 import axios from 'axios';
 
-const rawBaseURL = import.meta.env.VITE_API_URL || 'https://skillvibe-b-production.up.railway.app';
+let rawBaseURL = import.meta.env.VITE_API_URL || 'https://skillvibe-b-production.up.railway.app';
+
+// Si la variable de entorno se configuró sin https:// (ej. skillvibe-b...), Axios la toma como ruta relativa.
+// Le agregamos https:// automáticamente si no empieza con http o /
+if (rawBaseURL && !rawBaseURL.startsWith('http') && !rawBaseURL.startsWith('/')) {
+  rawBaseURL = 'https://' + rawBaseURL;
+}
+
 // Quitar slash final si lo tiene para evitar errores de doble slash (//api)
 const cleanBaseURL = rawBaseURL.replace(/\/+$/, '');
 
