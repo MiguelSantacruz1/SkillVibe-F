@@ -126,6 +126,37 @@ const TutorSettings = () => {
             </div>
           </div>
 
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>URL Foto de Perfil</label>
+              <div style={{ position: 'relative' }}>
+                <User size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                <input 
+                  type="text" 
+                  className="form-input" 
+                  style={{ paddingLeft: '3rem' }} 
+                  placeholder="https://ejemplo.com/foto.jpg"
+                  value={profile.profilePictureUrl || ''}
+                  onChange={(e) => setProfile({ ...profile, profilePictureUrl: e.target.value })}
+                />
+              </div>
+            </div>
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Enlace a Certificados</label>
+              <div style={{ position: 'relative' }}>
+                <FileText size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                <input 
+                  type="text" 
+                  className="form-input" 
+                  style={{ paddingLeft: '3rem' }} 
+                  placeholder="https://tu-enlace.com/certificados"
+                  value={profile.credentialsUrl || ''}
+                  onChange={(e) => setProfile({ ...profile, credentialsUrl: e.target.value })}
+                />
+              </div>
+            </div>
+          </div>
+
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Biografía Profesional</label>
             <div style={{ position: 'relative' }}>
