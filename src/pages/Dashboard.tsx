@@ -14,7 +14,7 @@ const Dashboard = () => {
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
-  const [selectedClassForReview, setSelectedClassForReview] = useState<{id: number, tutorName: string} | null>(null);
+  const [selectedClassForReview, setSelectedClassForReview] = useState<{ id: number, tutorName: string } | null>(null);
 
   useEffect(() => {
     if (!user) {
@@ -210,9 +210,9 @@ const Dashboard = () => {
                     </button>
                   )}
                   {tutoringClass.meetingLink && tutoringClass.status !== 'COMPLETED' && (
-                    <button 
+                    <button
                       onClick={() => navigate(`/classroom/${tutoringClass.id}`)}
-                      className="btn btn-primary" 
+                      className="btn btn-primary"
                       style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}
                     >
                       Unirse
@@ -224,7 +224,7 @@ const Dashboard = () => {
 
             {filtered.length === 0 && user?.role === 'STUDENT' && (
               <div style={{ gridColumn: '1 / -1', display: 'flex', flexDirection: 'column', gap: '2rem', animation: 'fadeIn 0.5s ease-out' }}>
-                
+
                 {/* Hero Banner */}
                 <div style={{
                   background: 'linear-gradient(135deg, rgba(168,85,247,0.15) 0%, rgba(236,72,153,0.15) 100%)',
@@ -233,7 +233,7 @@ const Dashboard = () => {
                 }}>
                   <div style={{ position: 'absolute', top: '-10%', left: '-5%', width: '150px', height: '150px', background: '#a855f7', filter: 'blur(80px)', opacity: 0.3, borderRadius: '50%' }}></div>
                   <div style={{ position: 'absolute', bottom: '-10%', right: '-5%', width: '150px', height: '150px', background: '#ec4899', filter: 'blur(80px)', opacity: 0.3, borderRadius: '50%' }}></div>
-                  
+
                   <Sparkles size={48} color="#ec4899" style={{ margin: '0 auto 1rem auto' }} />
                   <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem', background: 'linear-gradient(to right, #e879f9, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     Desata tu máximo potencial
@@ -241,8 +241,8 @@ const Dashboard = () => {
                   <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto 2rem auto' }}>
                     Aún no tienes clases programadas. Conecta con expertos de todo el mundo y lleva tus habilidades al siguiente nivel.
                   </p>
-                  <button 
-                    className="btn btn-primary" 
+                  <button
+                    className="btn btn-primary"
                     onClick={() => navigate('/browse')}
                     style={{ padding: '0.8rem 2rem', fontSize: '1.1rem', display: 'inline-flex', gap: '0.5rem', alignItems: 'center', borderRadius: '9999px', boxShadow: '0 4px 14px 0 rgba(168, 85, 247, 0.39)' }}
                   >
@@ -266,8 +266,8 @@ const Dashboard = () => {
                         padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', cursor: 'pointer',
                         transition: 'all 0.3s ease', border: '1px solid rgba(255,255,255,0.05)'
                       }}
-                      onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
-                      onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
+                        onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                        onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
                         <div style={{ padding: '1rem', borderRadius: '12px', background: `${materia.color}15` }}>
                           {materia.icon}
                         </div>
@@ -284,9 +284,9 @@ const Dashboard = () => {
                   </h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
                     {[
-                      { name: 'Dra. Elena Gómez', subject: 'Física Cuántica', rate: 25000, rating: 4.9, img: 'https://i.pravatar.cc/150?img=32' },
-                      { name: 'Carlos Ruíz', subject: 'Desarrollo Frontend', rate: 18500, rating: 4.8, img: 'https://i.pravatar.cc/150?img=11' },
-                      { name: 'Sarah Miller', subject: 'Inglés Avanzado', rate: 20000, rating: 5.0, img: 'https://i.pravatar.cc/150?img=5' },
+                      { name: '???', subject: '???', rate: 0, rating: 5.0, img: 'https://us.123rf.com/450wm/arhimicrostok/arhimicrostok1705/arhimicrostok170503532/77983394-conexi%C3%B3n-del-icono-de-la-interfaz-de-usuario-de-la-interfaz-persona-masculina-estilo-de-atenci%C3%B3n.jpg?ver=6' },
+                      { name: '???', subject: '???', rate: 0, rating: 5.0, img: 'https://us.123rf.com/450wm/arhimicrostok/arhimicrostok1705/arhimicrostok170503532/77983394-conexi%C3%B3n-del-icono-de-la-interfaz-de-usuario-de-la-interfaz-persona-masculina-estilo-de-atenci%C3%B3n.jpg?ver=6' },
+                      { name: '???', subject: '???', rate: 0, rating: 5.0, img: 'https://us.123rf.com/450wm/arhimicrostok/arhimicrostok1705/arhimicrostok170503532/77983394-conexi%C3%B3n-del-icono-de-la-interfaz-de-usuario-de-la-interfaz-persona-masculina-estilo-de-atenci%C3%B3n.jpg?ver=6' },
                     ].map((tutor) => (
                       <div key={tutor.name} className="glass-card item-card" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                         <img src={tutor.img} alt={tutor.name} style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #a855f7' }} />
