@@ -3,7 +3,6 @@ import { UserPlus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '../services/api';
-import { useAuth } from '../context/AuthContext';
 
 const Register = () => {
   const [fullName, setFullName] = useState('');
@@ -22,7 +21,6 @@ const Register = () => {
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
