@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { UserPlus } from 'lucide-react';
+import { UserPlus, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '../services/api';
@@ -8,8 +8,9 @@ const Register = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState<'STUDENT' | 'TUTOR'>('STUDENT');
-  
+
   // Campos extra para Tutor
   const [bio, setBio] = useState('');
   const [profilePictureUrl, setProfilePictureUrl] = useState('');
@@ -29,7 +30,7 @@ const Register = () => {
     try {
       if (role === 'TUTOR') {
         const subjectList = subjects.split(',').map(s => s.trim()).filter(s => s !== '');
-        
+
         await authApi.registerTutor({
           fullName, email, password,
           bio, profilePictureUrl, identityCardUrl, degreeUrl,
@@ -37,7 +38,7 @@ const Register = () => {
           yearsOfExperience: Number(yearsOfExperience),
           subjects: subjectList
         });
-        
+
         toast.success('¡Registro exitoso! Se ha enviado un mensaje a tu correo para su verificación y tu perfil de tutor está pendiente de revisión.', { duration: 8000 });
         setTimeout(() => navigate('/login'), 4000);
       } else {
@@ -104,7 +105,7 @@ const Register = () => {
             <input
               type="text" id="fullName" className="form-input"
               value={fullName} onChange={(e) => setFullName(e.target.value)}
-              placeholder="Tu nombre completo" required
+              placeholder="Tu nombre completo" required maxLength={100}
             />
           </div>
 
@@ -113,17 +114,38 @@ const Register = () => {
             <input
               type="email" id="reg-email" className="form-input"
               value={email} onChange={(e) => setEmail(e.target.value)}
-              placeholder="correo@ejemplo.com" required autoComplete="email"
+              placeholder="correo@ejemplo.com" required autoComplete="email" maxLength={100}
             />
           </div>
 
           <div className="form-group">
             <label className="form-label" htmlFor="reg-password">Contraseña</label>
-            <input
-              type="password" id="reg-password" className="form-input"
-              value={password} onChange={(e) => setPassword(e.target.value)}
-              placeholder="Mínimo 6 caracteres" minLength={6} required autoComplete="new-password"
-            />
+            <div style={{ position: 'relative' }}>
+              <input
+                type={showPassword ? "text" : "password"} id="reg-password" className="form-input"
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Mínimo 6 caracteres" minLength={6} maxLength={50} required autoComplete="new-password"
+                style={{ paddingRight: '2.5rem' }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: 'absolute',
+                  right: '0.75rem',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  cursor: 'pointer',
+                  padding: 0,
+                  display: 'flex'
+                }}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           </div>
 
           {role === 'TUTOR' && (
@@ -132,14 +154,14 @@ const Register = () => {
               padding: '1.25rem', borderRadius: '8px', marginBottom: '1.5rem', marginTop: '0.5rem'
             }}>
               <h4 style={{ marginBottom: '1rem', color: '#a855f7' }}>📋 Perfil Profesional</h4>
-              
+
               <div className="form-group">
                 <label className="form-label" htmlFor="bio">Biografía Profesional (Mín. 50 caracteres)</label>
                 <textarea
                   id="bio" className="form-input" rows={3}
                   value={bio} onChange={(e) => setBio(e.target.value)}
                   placeholder="Cuéntanos sobre ti, tu metodología y por qué los estudiantes deberían elegirte."
-                  required={role === 'TUTOR'} minLength={50}
+                  required={role === 'TUTOR'} minLength={50} maxLength={200}
                 />
               </div>
 
@@ -148,7 +170,12 @@ const Register = () => {
                   <label className="form-label" htmlFor="hourlyRate">Tarifa por Hora ($ COP)</label>
                   <input
                     type="number" id="hourlyRate" className="form-input"
-                    value={hourlyRate} onChange={(e) => setHourlyRate(e.target.value ? Number(e.target.value) : '')}
+                    value={hourlyRate}
+                    onChange={(e) => {
+                      if (e.target.value.length <= 10) {
+                        setHourlyRate(e.target.value ? Number(e.target.value) : '');
+                      }
+                    }}
                     placeholder="Ej. 15500" required={role === 'TUTOR'} min="1" step="0.1"
                   />
                 </div>
@@ -184,7 +211,7 @@ const Register = () => {
                 <input
                   type="url" id="identityCardUrl" className="form-input"
                   value={identityCardUrl} onChange={(e) => setIdentityCardUrl(e.target.value)}
-                  placeholder="Documento para validación" required={role === 'TUTOR'}
+                  placeholder="https://ejemplo.com/documento.pdf" required={role === 'TUTOR'}
                 />
               </div>
               <div className="form-group">
@@ -192,13 +219,13 @@ const Register = () => {
                 <input
                   type="url" id="degreeUrl" className="form-input"
                   value={degreeUrl} onChange={(e) => setDegreeUrl(e.target.value)}
-                  placeholder="Certificado de estudios" required={role === 'TUTOR'}
+                  placeholder="https://ejemplo.com/certificado.pdf" required={role === 'TUTOR'}
                 />
               </div>
             </div>
           )}
 
-            <button
+          <button
             type="submit"
             className="btn btn-primary"
             style={{ width: '100%', marginTop: '0.5rem' }}

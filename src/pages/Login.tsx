@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LogIn } from 'lucide-react';
+import { LogIn, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '../services/api';
@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -51,6 +52,7 @@ const Login = () => {
               placeholder="correo@ejemplo.com"
               required
               autoComplete="email"
+              maxLength={100}
             />
           </div>
 
@@ -61,16 +63,37 @@ const Login = () => {
                 ¿Olvidaste tu contraseña?
               </Link>
             </div>
-            <input
-              type="password"
-              id="password"
-              className="form-input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Tu contraseña"
-              required
-              autoComplete="current-password"
-            />
+            <div style={{ position: 'relative' }}>
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                className="form-input"
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Tu contraseña"
+                required
+                autoComplete="current-password"
+                maxLength={50}
+                style={{ paddingRight: '2.5rem' }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: 'absolute',
+                  right: '0.75rem',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  cursor: 'pointer',
+                  padding: 0,
+                  display: 'flex'
+                }}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           </div>
 
           <button

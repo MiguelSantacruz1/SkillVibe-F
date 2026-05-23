@@ -32,11 +32,11 @@ function NavBar() {
         <img src="/logo.png" alt="SkillVibes Logo" className="nav-logo" />
         SkillVibes
       </Link>
-      <div className="nav-links">
-        <Link to="/" className="nav-link">Inicio</Link>
+      <div className="nav-links" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Link to="/" className="btn btn-primary" style={{ padding: '0.5rem 1rem' }}>Inicio</Link>
         {isAuthenticated ? (
           <>
-            <Link to="/dashboard" className="nav-link">Mis Clases</Link>
+            <Link to="/dashboard" className="btn btn-primary" style={{ padding: '0.5rem 1rem' }}>Mis Clases</Link>
             {user?.role === 'ROLE_STUDENT' && (
               <Link to="/wallet" className="nav-link" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--accent-primary)', fontWeight: 600 }}>
                 <span style={{ background: 'rgba(168,85,247,0.1)', padding: '0.2rem 0.6rem', borderRadius: '50px' }}>
@@ -45,10 +45,10 @@ function NavBar() {
               </Link>
             )}
             {user?.role === 'ROLE_TUTOR' && (
-              <Link to="/tutor/settings" className="nav-link">Configuración de Perfil</Link>
+              <Link to="/tutor/settings" className="btn btn-primary" style={{ padding: '0.5rem 1rem' }}>Configuración de Perfil</Link>
             )}
             {user?.role === 'ROLE_ADMIN' && (
-              <Link to="/admin" className="nav-link">Panel de Admin</Link>
+              <Link to="/admin" className="btn btn-primary" style={{ padding: '0.5rem 1rem' }}>Panel de Admin</Link>
             )}
             <NotificationBell />
             <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
@@ -64,7 +64,7 @@ function NavBar() {
           </>
         ) : (
           <>
-            <Link to="/login" className="nav-link">Iniciar Sesión</Link>
+            <Link to="/login" className="btn btn-primary" style={{ padding: '0.5rem 1rem' }}>Iniciar Sesión</Link>
             <Link to="/register" className="btn btn-primary" style={{ padding: '0.5rem 1rem' }}>
               Registrarse
             </Link>
