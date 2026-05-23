@@ -105,7 +105,7 @@ const Register = () => {
             <input
               type="text" id="fullName" className="form-input"
               value={fullName} onChange={(e) => setFullName(e.target.value)}
-              placeholder="Tu nombre completo" required maxLength={100}
+              placeholder="Tu nombre completo" required maxLength={70}
             />
           </div>
 
