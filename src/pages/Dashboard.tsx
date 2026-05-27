@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Search, Calendar, Clock, User, Filter, LogOut, BookOpen, DollarSign, Star, Code, Globe, PenTool, Sparkles, TrendingUp, ChevronRight, Loader } from 'lucide-react';
+import { Search, Calendar, Clock, User, Filter, BookOpen, DollarSign, Star, Code, Globe, PenTool, Sparkles, TrendingUp, ChevronRight, Loader } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { classesApi, tutorApi, type TutoringClass, type TutorProfile } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ReviewModal from '../components/ReviewModal';
 
 const Dashboard = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const [classes, setClasses] = useState<TutoringClass[]>([]);
@@ -56,10 +56,6 @@ const Dashboard = () => {
     fetchBoard();
   }, [user, navigate]);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
 
   const handleFinalize = async (id: number) => {
     try {
