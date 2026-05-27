@@ -116,10 +116,29 @@ const Dashboard = () => {
             <p style={{ fontSize: '1.75rem', fontWeight: 700 }}>{classes.length}</p>
           </div>
         </div>
-        <div className="glass-card" style={{ padding: '1.25rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <div 
+          className="glass-card" 
+          onClick={() => navigate('/wallet')}
+          style={{ padding: '1.25rem', display: 'flex', gap: '1rem', alignItems: 'center', cursor: 'pointer', transition: 'all 0.3s ease', position: 'relative', border: '1px solid rgba(16, 185, 129, 0.2)' }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-3px)';
+            e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(16, 185, 129, 0.1)';
+            e.currentTarget.style.borderColor = 'rgba(16, 185, 129, 0.5)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.2)';
+            e.currentTarget.style.borderColor = 'rgba(16, 185, 129, 0.2)';
+          }}
+        >
           <DollarSign size={28} color="#10b981" />
-          <div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Saldo</p>
+          <div style={{ flex: 1 }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+              Saldo 
+              <span style={{ color: '#10b981', fontSize: '0.7rem', fontWeight: 600, padding: '0.1rem 0.4rem', background: 'rgba(16,185,129,0.1)', borderRadius: '50px', marginLeft: '0.3rem' }}>
+                + Recargar
+              </span>
+            </p>
             <p style={{ fontSize: '1.75rem', fontWeight: 700 }}>${user?.balance?.toLocaleString('es-CO') ?? '0'}</p>
           </div>
         </div>
