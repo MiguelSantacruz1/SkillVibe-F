@@ -101,10 +101,6 @@ const Dashboard = () => {
             </span>
           </p>
         </div>
-        <button className="btn" onClick={handleLogout}
-          style={{ display: 'flex', gap: '0.5rem', border: '1px solid var(--border-color)', background: 'transparent', color: 'var(--text-color)' }}>
-          <LogOut size={18} /> Cerrar Sesión
-        </button>
       </div>
 
       {/* Stats */}

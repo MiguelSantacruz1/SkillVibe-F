@@ -6,7 +6,27 @@ const Home = () => {
   const { isAuthenticated, user } = useAuth();
 
   return (
-    <div className="container animate-fade-in">
+    <div className="container animate-fade-in" style={{ position: 'relative' }}>
+      
+      {/* ── Watermark ───────────────────────────────────────────── */}
+      <div style={{
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        zIndex: -1,
+        opacity: 0.03, // Faded for watermark effect
+        pointerEvents: 'none', // Allows clicking through it
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <img 
+          src="/logo1.jpg" 
+          alt="Watermark" 
+          style={{ width: '600px', maxWidth: '80vw', filter: 'grayscale(100%) contrast(120%)' }} 
+        />
+      </div>
 
       {/* ── Hero ────────────────────────────────────────────────── */}
       <section className="hero">
