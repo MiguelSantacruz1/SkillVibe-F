@@ -15,16 +15,21 @@ const Home = () => {
         left: '50%',
         transform: 'translate(-50%, -50%)',
         zIndex: -1,
-        opacity: 0.03, // Faded for watermark effect
+        opacity: 0.06, // Slightly increased opacity since we are blending
         pointerEvents: 'none', // Allows clicking through it
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        mixBlendMode: 'screen' // Makes the inverted black background transparent
       }}>
         <img 
           src="/logo1.jpg" 
           alt="Watermark" 
-          style={{ width: '600px', maxWidth: '80vw', filter: 'grayscale(100%) contrast(120%)' }} 
+          style={{ 
+            width: '900px', // Mas grande
+            maxWidth: '100vw', 
+            filter: 'invert(1) grayscale(100%) contrast(150%)' // Invert to turn white bg into black
+          }} 
         />
       </div>
 
