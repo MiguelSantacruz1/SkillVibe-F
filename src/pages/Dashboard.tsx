@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Calendar, Clock, User, Filter, LogOut, BookOpen, DollarSign, Star, Code, Globe, PenTool, Sparkles, TrendingUp, ChevronRight } from 'lucide-react';
+import { Search, Calendar, Clock, User, Filter, LogOut, BookOpen, DollarSign, Star, Code, Globe, PenTool, Sparkles, TrendingUp, ChevronRight, Loader } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { classesApi, tutorApi, type TutoringClass, type TutorProfile } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -16,6 +16,20 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [selectedClassForReview, setSelectedClassForReview] = useState<{ id: number, tutorName: string } | null>(null);
+  const [featuredTutors, setFeaturedTutors] = useState<TutorProfile[]>([]);
+  const [loadingTutors, setLoadingTutors] = useState(true);
+
+  useEffect(() => {
+    tutorApi
+      .search({ size: 3, sort: 'averageRating,desc' })
+      .then((res) => {
+        const data = res.data as any;
+        const list: TutorProfile[] = data?.content ?? (Array.isArray(data) ? data : []);
+        setFeaturedTutors(list.slice(0, 3));
+      })
+      .catch(() => setFeaturedTutors([]))
+      .finally(() => setLoadingTutors(false));
+  }, []);
 
   useEffect(() => {
     if (!user) {
@@ -287,27 +301,35 @@ const Dashboard = () => {
                   <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
                     <Star size={24} color="#eab308" /> Tutores Destacados
                   </h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
-                    {[
-                      { name: '???', subject: '???', rate: 0, rating: 5.0, img: 'https://us.123rf.com/450wm/arhimicrostok/arhimicrostok1705/arhimicrostok170503532/77983394-conexi%C3%B3n-del-icono-de-la-interfaz-de-usuario-de-la-interfaz-persona-masculina-estilo-de-atenci%C3%B3n.jpg?ver=6' },
-                      { name: '???', subject: '???', rate: 0, rating: 5.0, img: 'https://us.123rf.com/450wm/arhimicrostok/arhimicrostok1705/arhimicrostok170503532/77983394-conexi%C3%B3n-del-icono-de-la-interfaz-de-usuario-de-la-interfaz-persona-masculina-estilo-de-atenci%C3%B3n.jpg?ver=6' },
-                      { name: '???', subject: '???', rate: 0, rating: 5.0, img: 'https://us.123rf.com/450wm/arhimicrostok/arhimicrostok1705/arhimicrostok170503532/77983394-conexi%C3%B3n-del-icono-de-la-interfaz-de-usuario-de-la-interfaz-persona-masculina-estilo-de-atenci%C3%B3n.jpg?ver=6' },
-                    ].map((tutor) => (
-                      <div key={tutor.name} className="glass-card item-card" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                        <img src={tutor.img} alt={tutor.name} style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #a855f7' }} />
-                        <div style={{ flex: 1 }}>
-                          <h4 style={{ margin: '0 0 0.2rem 0' }}>{tutor.name}</h4>
-                          <span className="item-badge" style={{ fontSize: '0.75rem', marginBottom: '0.5rem', display: 'inline-block' }}>{tutor.subject}</span>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.2rem' }}>
-                            <span style={{ color: '#eab308', display: 'flex', alignItems: 'center', gap: '0.2rem', fontSize: '0.9rem', fontWeight: 600 }}>
-                              <Star size={14} fill="#eab308" /> {tutor.rating}
-                            </span>
-                            <span style={{ color: '#10b981', fontWeight: 700 }}>${tutor.rate.toLocaleString('es-CO')}/h</span>
+                  
+                  {loadingTutors ? (
+                    <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem 0', color: 'var(--text-muted)', gap: '0.75rem', alignItems: 'center' }}>
+                      <Loader size={22} style={{ animation: 'spin 1s linear infinite' }} />
+                      Cargando tutores...
+                    </div>
+                  ) : featuredTutors.length === 0 ? (
+                    <div style={{ textAlign: 'center', padding: '2rem 0', color: 'var(--text-muted)' }}>
+                      <p>Aún no hay tutores registrados.</p>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
+                      {featuredTutors.map((tutor) => (
+                        <div key={tutor.id} className="glass-card item-card" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                          <img src={tutor.profilePictureUrl || `https://ui-avatars.com/api/?name=${tutor.fullName}&background=random`} alt={tutor.fullName} style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #a855f7' }} />
+                          <div style={{ flex: 1 }}>
+                            <h4 style={{ margin: '0 0 0.2rem 0' }}>{tutor.fullName}</h4>
+                            <span className="item-badge" style={{ fontSize: '0.75rem', marginBottom: '0.5rem', display: 'inline-block' }}>{tutor.subjects?.[0] || 'Varios'}</span>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.2rem' }}>
+                              <span style={{ color: '#eab308', display: 'flex', alignItems: 'center', gap: '0.2rem', fontSize: '0.9rem', fontWeight: 600 }}>
+                                <Star size={14} fill="#eab308" /> {tutor.averageRating > 0 ? tutor.averageRating.toFixed(1) : 'Nuevo'}
+                              </span>
+                              <span style={{ color: '#10b981', fontWeight: 700 }}>${tutor.hourlyRate?.toLocaleString('es-CO')}/h</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
               </div>
