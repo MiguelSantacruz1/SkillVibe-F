@@ -50,17 +50,50 @@ function NavBar() {
             {user?.role === 'ROLE_ADMIN' && (
               <Link to="/admin" className="btn btn-primary" style={{ padding: '0.5rem 1rem', opacity: 0.75 }}>Panel de Admin</Link>
             )}
-            <NotificationBell />
-            <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-              {user?.fullName}
-            </span>
-            <button
-              onClick={handleLogout}
-              className="btn"
-              style={{ padding: '0.5rem 1rem', border: '1px solid var(--border-color)', background: 'transparent', color: 'var(--text-color)' }}
-            >
-              Cerrar Sesión
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', borderLeft: '1px solid var(--border-color)', paddingLeft: '1rem', marginLeft: '0.5rem' }}>
+              <NotificationBell />
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.2rem 0.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '50px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <img 
+                  src={`https://ui-avatars.com/api/?name=${user?.fullName || 'User'}&background=a855f7&color=fff&bold=true`} 
+                  alt="Avatar" 
+                  style={{ width: '32px', height: '32px', borderRadius: '50%', border: '2px solid rgba(168,85,247,0.4)', boxShadow: '0 2px 8px rgba(168,85,247,0.2)' }}
+                />
+                <div style={{ display: 'flex', flexDirection: 'column', paddingRight: '0.5rem' }}>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600, lineHeight: '1.2', color: 'var(--text-color)' }}>
+                    {user?.fullName}
+                  </span>
+                  <span style={{ fontSize: '0.7rem', color: '#a855f7', fontWeight: 500, letterSpacing: '0.05em' }}>
+                    {user?.role?.replace('ROLE_', '') || 'USUARIO'}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={handleLogout}
+                className="btn"
+                style={{ 
+                  padding: '0.4rem 1rem', 
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  border: '1px solid rgba(239, 68, 68, 0.4)', 
+                  background: 'rgba(239, 68, 68, 0.1)', 
+                  color: '#f87171',
+                  borderRadius: '9999px',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                Cerrar Sesión
+              </button>
+            </div>
           </>
         ) : (
           <>
