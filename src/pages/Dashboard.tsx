@@ -21,7 +21,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     tutorApi
-      .search({ size: 3, sort: 'averageRating,desc' })
+      .search({ size: 3, sort: 'averageRating,desc', onlyVerified: false })
       .then((res) => {
         const data = res.data as any;
         const list: TutorProfile[] = data?.content ?? (Array.isArray(data) ? data : []);

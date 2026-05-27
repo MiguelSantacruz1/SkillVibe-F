@@ -1,26 +1,9 @@
-import { ArrowRight, BookOpen, Users, Star, CheckCircle, Loader } from 'lucide-react';
+import { ArrowRight, BookOpen, Users, Star, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { tutorApi, type TutorProfile } from '../services/api';
-import TutorCard from '../components/TutorCard';
 
 const Home = () => {
   const { isAuthenticated, user } = useAuth();
-  const [featuredTutors, setFeaturedTutors] = useState<TutorProfile[]>([]);
-  const [loadingTutors, setLoadingTutors] = useState(true);
-
-  useEffect(() => {
-    tutorApi
-      .search({ size: 3, sort: 'averageRating,desc' })
-      .then((res) => {
-        const data = res.data as any;
-        const list: TutorProfile[] = data?.content ?? (Array.isArray(data) ? data : []);
-        setFeaturedTutors(list.slice(0, 3));
-      })
-      .catch(() => setFeaturedTutors([]))
-      .finally(() => setLoadingTutors(false));
-  }, []);
 
   return (
     <div className="container animate-fade-in">
@@ -78,42 +61,6 @@ const Home = () => {
         )}
       </section>
 
-      {/* ── Featured Tutors ──────────────────────────────────────── */}
-      <section style={{ padding: '2rem 0 4rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-          <h2 style={{ margin: 0 }}>
-            <Star size={22} color="#f59e0b" fill="#f59e0b" style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} />
-            Tutores Destacados
-          </h2>
-          <Link to="/tutors" className="btn" style={{
-            padding: '0.5rem 1.2rem', fontSize: '0.9rem',
-            border: '1px solid var(--border-color)', background: 'transparent', color: 'var(--text-color)'
-          }}>
-            Ver todos <ArrowRight size={14} style={{ marginLeft: '0.3rem', verticalAlign: 'middle' }} />
-          </Link>
-        </div>
-        <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
-          Los tutores mejor valorados listos para ayudarte
-        </p>
-
-        {loadingTutors ? (
-          <div style={{ display: 'flex', justifyContent: 'center', padding: '3rem 0', color: 'var(--text-muted)', gap: '0.75rem', alignItems: 'center' }}>
-            <Loader size={22} style={{ animation: 'spin 1s linear infinite' }} />
-            Cargando tutores…
-          </div>
-        ) : featuredTutors.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--text-muted)' }}>
-            <Users size={40} style={{ marginBottom: '1rem', opacity: 0.4 }} />
-            <p>Aún no hay tutores registrados.</p>
-          </div>
-        ) : (
-          <div className="grid">
-            {featuredTutors.map((tutor) => (
-              <TutorCard key={tutor.id} tutor={tutor} />
-            ))}
-          </div>
-        )}
-      </section>
 
       {/* ── Features ────────────────────────────────────────────── */}
       <section style={{ padding: '4rem 0' }}>
