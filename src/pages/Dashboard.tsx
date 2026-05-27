@@ -108,8 +108,8 @@ const Dashboard = () => {
             <p style={{ fontSize: '1.75rem', fontWeight: 700 }}>{classes.length}</p>
           </div>
         </div>
-        <div 
-          className="glass-card" 
+        <div
+          className="glass-card"
           onClick={() => navigate('/wallet')}
           style={{ padding: '1.25rem', display: 'flex', gap: '1rem', alignItems: 'center', cursor: 'pointer', transition: 'all 0.3s ease', position: 'relative', border: '1px solid rgba(16, 185, 129, 0.2)' }}
           onMouseEnter={(e) => {
@@ -126,7 +126,7 @@ const Dashboard = () => {
           <DollarSign size={28} color="#10b981" />
           <div style={{ flex: 1 }}>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-              Saldo 
+              Saldo
               <span style={{ color: '#10b981', fontSize: '0.7rem', fontWeight: 600, padding: '0.1rem 0.4rem', background: 'rgba(16,185,129,0.1)', borderRadius: '50px', marginLeft: '0.3rem' }}>
                 + Recargar
               </span>
@@ -312,7 +312,7 @@ const Dashboard = () => {
                   <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
                     <Star size={24} color="#eab308" /> Tutores Destacados
                   </h3>
-                  
+
                   {loadingTutors ? (
                     <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem 0', color: 'var(--text-muted)', gap: '0.75rem', alignItems: 'center' }}>
                       <Loader size={22} style={{ animation: 'spin 1s linear infinite' }} />
@@ -402,3 +402,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
