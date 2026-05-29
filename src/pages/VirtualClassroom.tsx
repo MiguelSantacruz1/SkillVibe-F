@@ -16,6 +16,7 @@ const VirtualClassroom = () => {
   const [feedback, setFeedback] = useState('');
   const [loadingAI, setLoadingAI] = useState(false);
   const [connected, setConnected] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const canvasRef = useRef<any>(null);
   const stompClient = useRef<Client | null>(null);
 

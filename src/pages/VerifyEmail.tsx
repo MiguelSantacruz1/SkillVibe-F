@@ -7,14 +7,12 @@ type Status = 'loading' | 'success' | 'error';
 
 const VerifyEmail: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const [status, setStatus] = useState<Status>('loading');
-  const [message, setMessage] = useState('');
+  const [status, setStatus] = useState<Status>(() => searchParams.get('token') ? 'loading' : 'error');
+  const [message, setMessage] = useState(() => searchParams.get('token') ? '' : 'El enlace de verificación no es válido.');
 
   useEffect(() => {
     const token = searchParams.get('token');
     if (!token) {
-      setStatus('error');
-      setMessage('El enlace de verificación no es válido.');
       return;
     }
 
@@ -23,9 +21,9 @@ const VerifyEmail: React.FC = () => {
         setStatus('success');
         setMessage('¡Tu cuenta ha sido verificada exitosamente!');
       })
-      .catch((err: any) => {
+      .catch(() => {
         setStatus('error');
-        setMessage(err.response?.data?.message || 'El enlace expiró o no es válido. Solicita uno nuevo.');
+        setMessage('El enlace expiró o no es válido. Solicita uno nuevo.');
       });
   }, [searchParams]);
 

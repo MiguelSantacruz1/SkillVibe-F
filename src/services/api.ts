@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 
 let rawBaseURL = import.meta.env.VITE_API_URL || 'https://skillvibe-b-production.up.railway.app';

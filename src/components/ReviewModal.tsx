@@ -32,8 +32,8 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ tutoringClassId, tutorName, i
       toast.success('¡Reseña enviada con éxito!');
       onSuccess();
       onClose();
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Error al enviar la reseña');
+    } catch {
+      toast.error('Error al enviar la reseña');
     } finally {
       setIsSubmitting(false);
     }

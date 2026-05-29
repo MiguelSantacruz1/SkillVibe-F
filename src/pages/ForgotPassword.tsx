@@ -17,7 +17,7 @@ const ForgotPassword: React.FC = () => {
     try {
       await api.post('/auth/forgot-password', { email });
       setSent(true);
-    } catch (err: any) {
+    } catch {
       setError(err.response?.data?.message || 'Ocurrió un error. Inténtalo de nuevo.');
     } finally {
       setLoading(false);

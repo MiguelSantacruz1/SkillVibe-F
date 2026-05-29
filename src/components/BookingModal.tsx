@@ -37,7 +37,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
         onSuccess();
         onClose();
       }, 2000);
-    } catch (err: any) {
+    } catch {
       toast.error(err.response?.data?.message || 'No se pudo completar la reserva. Verifica tu saldo.');
     } finally {
       setLoading(false);

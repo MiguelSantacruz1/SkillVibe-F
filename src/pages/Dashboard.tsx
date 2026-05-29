@@ -23,7 +23,7 @@ const Dashboard = () => {
     tutorApi
       .search({ size: 3, sort: 'averageRating,desc', onlyVerified: false })
       .then((res) => {
-        const data = res.data as any;
+        const data = res.data as unknown;
         const list: TutorProfile[] = data?.content ?? (Array.isArray(data) ? data : []);
         setFeaturedTutors(list.slice(0, 3));
       })
