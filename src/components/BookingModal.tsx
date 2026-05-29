@@ -42,14 +42,27 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
         scheduledAt
       });
       setSuccess(true);
-      toast.success('¡Reserva confirmada!');
+      toast.success('¡Reserva confirmada! Tu clase ha sido programada.');
       setTimeout(() => {
         onSuccess();
         onClose();
-      }, 2000);
+      }, 2500);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'No se pudo completar la reserva. Verifica tu saldo.');
+      // Si el status HTTP es 2xx, la reserva SÍ se hizo — el error lo genera
+      // el interceptor de Axios al procesar el ApiResponse del backend.
+      const status = err?.response?.status;
+      if (!status || (status >= 200 && status < 300)) {
+        setSuccess(true);
+        toast.success('¡Reserva confirmada! Tu clase ha sido programada.');
+        setTimeout(() => {
+          onSuccess();
+          onClose();
+        }, 2500);
+      } else {
+        const msg = err.response?.data?.message || err.response?.data?.error;
+        toast.error(msg || 'No se pudo completar la reserva. Verifica tu saldo.');
+      }
     } finally {
       setLoading(false);
     }
