@@ -256,7 +256,15 @@ const Dashboard = () => {
                       <button
                         onClick={() => {
                           if (now >= classTime - fiveMin) {
-                            window.open(tutoringClass.meetingLink, '_blank');
+                            let finalLink = tutoringClass.meetingLink;
+                            if (finalLink.startsWith('http')) {
+                              const parts = finalLink.split('/');
+                              const roomId = parts[parts.length - 1];
+                              finalLink = `/classroom/${roomId}`;
+                            } else if (!finalLink.startsWith('/')) {
+                              finalLink = `/classroom/${finalLink}`;
+                            }
+                            window.open(finalLink, '_blank');
                           } else {
                             toast.error('La clase aún no ha comenzado. Podrás ingresar 5 minutos antes de la hora programada.');
                           }
