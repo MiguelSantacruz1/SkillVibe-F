@@ -322,12 +322,12 @@ const CommunityFeed: React.FC = () => {
     try {
       const res = await postsApi.like(postId);
       const updated = res.data as unknown as CommunityPost;
-      setPosts(prev => prev.map(p => p.id === postId ? { 
-        ...p, 
+      setPosts(prev => prev.map(p => p.id === postId ? {
+        ...p,
         likesCount: updated.likesCount,
-        likedByMe: updated.likedByMe 
+        likedByMe: updated.likedByMe
       } : p));
-      
+
       // Update featured if it's there
       setFeatured(prev => prev.map(p => p.id === postId ? {
         ...p,
@@ -681,3 +681,4 @@ const CommunityFeed: React.FC = () => {
 };
 
 export default CommunityFeed;
+
