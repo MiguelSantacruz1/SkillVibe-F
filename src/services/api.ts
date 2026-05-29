@@ -151,6 +151,9 @@ export const classesApi = {
 
   finalize: (id: number) =>
     api.put<TutoringClass>(`/tutoringClasses/${id}/finalizar`),
+
+  cancel: (id: number) =>
+    api.put<TutoringClass>(`/tutoringClasses/${id}/cancelar`),
 };
 
 // ── Tutors ───────────────────────────────────────────────────────────────────

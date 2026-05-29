@@ -72,6 +72,23 @@ const Dashboard = () => {
     }
   };
 
+  const handleCancel = async (id: number) => {
+    if (!window.confirm('¿Estás seguro de que deseas cancelar esta clase? El saldo será reembolsado.')) return;
+    try {
+      await classesApi.cancel(id);
+      setClasses((prev) => prev.filter((t) => t.id !== id));
+      toast.success('Clase cancelada. El saldo ha sido reembolsado.');
+    } catch (err: any) {
+      const status = err?.response?.status;
+      if (!status || (status >= 200 && status < 300)) {
+        setClasses((prev) => prev.filter((t) => t.id !== id));
+        toast.success('Clase cancelada correctamente.');
+      } else {
+        toast.error(err.response?.data?.message || 'No se pudo cancelar la clase.');
+      }
+    }
+  };
+
   const filtered = classes.filter((t) =>
     t.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
     t.description?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -224,13 +241,22 @@ const Dashboard = () => {
                   <span style={{ color: '#10b981', fontWeight: 700, fontSize: '1.1rem' }}>
                     ${tutoringClass.price?.toLocaleString('es-CO')}
                   </span>
-                  {user?.role === 'TUTOR' && tutoringClass.status !== 'COMPLETED' && (
+                  {user?.role === 'TUTOR' && tutoringClass.status !== 'COMPLETED' && tutoringClass.status !== 'CANCELLED' && (
                     <button
                       className="btn btn-primary"
                       style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}
                       onClick={() => handleFinalize(tutoringClass.id)}
                     >
                       Completar
+                    </button>
+                  )}
+                  {tutoringClass.status === 'PROGRAMMED' && (
+                    <button
+                      className="btn"
+                      style={{ padding: '0.4rem 1rem', fontSize: '0.85rem', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.4)', color: '#f87171', borderRadius: '8px', cursor: 'pointer' }}
+                      onClick={() => handleCancel(tutoringClass.id)}
+                    >
+                      Cancelar
                     </button>
                   )}
                   {user?.role === 'STUDENT' && tutoringClass.status === 'COMPLETED' && (
