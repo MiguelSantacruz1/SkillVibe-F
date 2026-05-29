@@ -272,8 +272,8 @@ const Dashboard = () => {
               </div>
             ))}
 
-            {filtered.length === 0 && user?.role === 'STUDENT' && (
-              <div style={{ gridColumn: '1 / -1', display: 'flex', flexDirection: 'column', gap: '2rem', animation: 'fadeIn 0.5s ease-out' }}>
+            {user?.role === 'STUDENT' && (
+              <div style={{ gridColumn: '1 / -1', display: 'flex', flexDirection: 'column', gap: '2rem', animation: 'fadeIn 0.5s ease-out', marginTop: filtered.length > 0 ? '2rem' : '0' }}>
 
                 {/* Hero Banner */}
                 <div style={{
@@ -286,10 +286,12 @@ const Dashboard = () => {
 
                   <Sparkles size={48} color="#ec4899" style={{ margin: '0 auto 1rem auto' }} />
                   <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem', background: 'linear-gradient(to right, #e879f9, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                    Desata tu máximo potencial
+                    {filtered.length === 0 ? 'Desata tu máximo potencial' : 'Sigue aprendiendo y creciendo'}
                   </h2>
                   <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto 2rem auto' }}>
-                    Aún no tienes clases programadas. Conecta con expertos de todo el mundo y lleva tus habilidades al siguiente nivel.
+                    {filtered.length === 0 
+                      ? 'Aún no tienes clases programadas. Conecta con expertos de todo el mundo y lleva tus habilidades al siguiente nivel.'
+                      : 'Explora nuevas materias, conecta con más expertos de todo el mundo y lleva tus habilidades al siguiente nivel.'}
                   </p>
                   <button
                     className="btn btn-primary"
@@ -366,15 +368,17 @@ const Dashboard = () => {
               </div>
             )}
 
-            {filtered.length === 0 && user?.role === 'TUTOR' && (
-              <div style={{ gridColumn: '1 / -1' }}>
-                <div style={{ textAlign: 'center', padding: '5rem 2rem', background: 'rgba(168,85,247,0.05)', borderRadius: '16px', border: '1px dashed rgba(168,85,247,0.3)', marginBottom: '2rem' }}>
-                  <BookOpen size={64} color="#a855f7" style={{ margin: '0 auto 1.5rem auto', opacity: 0.8 }} />
-                  <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Tu agenda está libre</h2>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', maxWidth: '500px', margin: '0 auto 2rem auto' }}>
-                    Aún no tienes clases programadas con estudiantes. Optimiza tu perfil y prepárate para compartir tu conocimiento.
-                  </p>
-                </div>
+            {user?.role === 'TUTOR' && (
+              <div style={{ gridColumn: '1 / -1', marginTop: filtered.length > 0 ? '2rem' : '0' }}>
+                {filtered.length === 0 && (
+                  <div style={{ textAlign: 'center', padding: '5rem 2rem', background: 'rgba(168,85,247,0.05)', borderRadius: '16px', border: '1px dashed rgba(168,85,247,0.3)', marginBottom: '2rem' }}>
+                    <BookOpen size={64} color="#a855f7" style={{ margin: '0 auto 1.5rem auto', opacity: 0.8 }} />
+                    <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Tu agenda está libre</h2>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', maxWidth: '500px', margin: '0 auto 2rem auto' }}>
+                      Aún no tienes clases programadas con estudiantes. Optimiza tu perfil y prepárate para compartir tu conocimiento.
+                    </p>
+                  </div>
+                )}
 
                 {profile && profile.subjects && profile.subjects.length > 0 && (
                   <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
