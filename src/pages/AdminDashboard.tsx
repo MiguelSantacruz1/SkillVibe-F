@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { adminApi } from '../services/api';
 import type { TutorProfile } from '../services/api';
-import { Check, X, Shield, Users, BookOpen } from 'lucide-react';
+import { Check, X, Shield, Users, BookOpen, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const AdminDashboard: React.FC = () => {
@@ -43,119 +43,147 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  if (loading) return <div className="text-center py-20">Cargando panel...</div>;
+  if (loading) return (
+    <div className="container" style={{ display: 'flex', justifyContent: 'center', padding: '4rem', color: 'var(--text-muted)' }}>
+      <div style={{ textAlign: 'center' }}>
+        <Shield size={48} color="#a855f7" style={{ margin: '0 auto 1rem', animation: 'spin 2s linear infinite' }} />
+        <p>Cargando panel de administración...</p>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-8 animate-fade-in">
-      <div className="flex items-center gap-3 mb-8">
-        <Shield className="w-8 h-8 text-indigo-600" />
-        <h1 className="text-3xl font-bold text-slate-800">Panel de Administración</h1>
+    <div className="container animate-fade-in">
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+        <Shield size={36} color="#a855f7" />
+        <div>
+          <h2>Panel de Administración</h2>
+          <p style={{ color: 'var(--text-muted)' }}>Gestiona la plataforma, usuarios y solicitudes</p>
+        </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex items-center gap-4">
-          <div className="p-4 bg-blue-50 text-blue-600 rounded-xl">
-            <Users className="w-6 h-6" />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
+        <div className="glass-card" style={{ padding: '1.5rem', display: 'flex', gap: '1.25rem', alignItems: 'center' }}>
+          <div style={{ padding: '1rem', background: 'rgba(59, 130, 246, 0.15)', borderRadius: '12px' }}>
+            <Users size={28} color="#3b82f6" />
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-500">Usuarios Activos</p>
-            <p className="text-2xl font-bold text-slate-800">{stats?.totalUsers || 0}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 500 }}>Usuarios Activos</p>
+            <p style={{ fontSize: '2rem', fontWeight: 700 }}>{stats?.totalUsers || 0}</p>
           </div>
         </div>
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex items-center gap-4">
-          <div className="p-4 bg-green-50 text-green-600 rounded-xl">
-            <Check className="w-6 h-6" />
+
+        <div className="glass-card" style={{ padding: '1.5rem', display: 'flex', gap: '1.25rem', alignItems: 'center' }}>
+          <div style={{ padding: '1rem', background: 'rgba(16, 185, 129, 0.15)', borderRadius: '12px' }}>
+            <Check size={28} color="#10b981" />
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-500">Tutores Verificados</p>
-            <p className="text-2xl font-bold text-slate-800">{verifiedTutors.length}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 500 }}>Tutores Verificados</p>
+            <p style={{ fontSize: '2rem', fontWeight: 700 }}>{verifiedTutors.length}</p>
           </div>
         </div>
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex items-center gap-4">
-          <div className="p-4 bg-amber-50 text-amber-600 rounded-xl">
-            <BookOpen className="w-6 h-6" />
+
+        <div className="glass-card" style={{ padding: '1.5rem', display: 'flex', gap: '1.25rem', alignItems: 'center' }}>
+          <div style={{ padding: '1rem', background: 'rgba(168, 85, 247, 0.15)', borderRadius: '12px' }}>
+            <BookOpen size={28} color="#a855f7" />
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-500">Clases Registradas</p>
-            <p className="text-2xl font-bold text-slate-800">{stats?.totalClasses || 0}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 500 }}>Clases Registradas</p>
+            <p style={{ fontSize: '2rem', fontWeight: 700 }}>{stats?.totalClasses || 0}</p>
           </div>
         </div>
       </div>
 
       {/* Pending Tutors Table */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="p-6 border-b border-slate-200">
-          <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+      <div className="glass-card" style={{ padding: '0', overflow: 'hidden' }}>
+        <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <Clock size={24} color="#f59e0b" />
+          <h3 style={{ margin: 0 }}>
             Solicitudes Pendientes
-            <span className="bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+            <span style={{ 
+              background: 'rgba(245, 158, 11, 0.15)', 
+              color: '#f59e0b', 
+              fontSize: '0.8rem', 
+              padding: '0.2rem 0.6rem', 
+              borderRadius: '9999px', 
+              marginLeft: '1rem',
+              fontWeight: 600
+            }}>
               {pendingTutors.length}
             </span>
-          </h2>
+          </h3>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-600">
-            <thead className="bg-slate-50 text-slate-500 text-xs uppercase font-semibold">
-              <tr>
-                <th className="px-6 py-4">Tutor</th>
-                <th className="px-6 py-4">Tarifa / Exp</th>
-                <th className="px-6 py-4">Materias</th>
-                <th className="px-6 py-4">Documentos</th>
-                <th className="px-6 py-4 text-right">Acciones</th>
+        
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <thead>
+              <tr style={{ background: 'rgba(255, 255, 255, 0.02)', color: 'var(--text-muted)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <th style={{ padding: '1rem 1.5rem', fontWeight: 600 }}>Tutor</th>
+                <th style={{ padding: '1rem 1.5rem', fontWeight: 600 }}>Tarifa / Exp</th>
+                <th style={{ padding: '1rem 1.5rem', fontWeight: 600 }}>Materias</th>
+                <th style={{ padding: '1rem 1.5rem', fontWeight: 600 }}>Documentos</th>
+                <th style={{ padding: '1rem 1.5rem', fontWeight: 600, textAlign: 'right' }}>Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody>
               {pendingTutors.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
-                    No hay solicitudes pendientes.
+                  <td colSpan={5} style={{ padding: '3rem 1.5rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                    No hay solicitudes pendientes en este momento.
                   </td>
                 </tr>
               ) : (
                 pendingTutors.map((tutor) => (
-                  <tr key={tutor.id} className="hover:bg-slate-50">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <img src={tutor.profilePictureUrl || 'https://via.placeholder.com/40'} alt={tutor.fullName} className="w-10 h-10 rounded-full object-cover" />
+                  <tr key={tutor.id} style={{ borderTop: '1px solid var(--border-color)', transition: 'background 0.2s ease' }} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
+                    <td style={{ padding: '1rem 1.5rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <img src={tutor.profilePictureUrl || `https://ui-avatars.com/api/?name=${tutor.fullName}&background=random`} alt={tutor.fullName} style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(168, 85, 247, 0.3)' }} />
                         <div>
-                          <p className="font-semibold text-slate-900">{tutor.fullName}</p>
-                          <p className="text-xs text-slate-500">{tutor.email}</p>
+                          <p style={{ fontWeight: 600, margin: 0 }}>{tutor.fullName}</p>
+                          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>{tutor.email}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
-                      <p className="font-medium text-slate-900">${tutor.hourlyRate.toLocaleString('es-CO')}/h</p>
-                      <p className="text-xs text-slate-500">{tutor.yearsOfExperience} años de exp.</p>
+                    <td style={{ padding: '1rem 1.5rem' }}>
+                      <p style={{ fontWeight: 600, color: '#10b981', margin: 0 }}>${tutor.hourlyRate.toLocaleString('es-CO')}/h</p>
+                      <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>{tutor.yearsOfExperience} años exp.</p>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex flex-wrap gap-1">
+                    <td style={{ padding: '1rem 1.5rem' }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
                         {tutor.subjects.map((sub, i) => (
-                          <span key={i} className="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded-md">
+                          <span key={i} style={{ background: 'rgba(168, 85, 247, 0.1)', color: '#c084fc', fontSize: '0.75rem', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>
                             {sub}
                           </span>
                         ))}
                       </div>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex flex-col gap-1 text-xs">
-                        {tutor.credentialsUrl && <a href={tutor.credentialsUrl} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">Documento de Identidad</a>}
-                      </div>
+                    <td style={{ padding: '1rem 1.5rem' }}>
+                      {tutor.credentialsUrl && (
+                        <a href={tutor.credentialsUrl} target="_blank" rel="noreferrer" style={{ color: '#3b82f6', textDecoration: 'none', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                          <Shield size={14} /> Ver Identidad
+                        </a>
+                      )}
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
+                    <td style={{ padding: '1rem 1.5rem', textAlign: 'right' }}>
+                      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
                         <button
                           onClick={() => handleVerify(tutor.userId, true)}
-                          className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                          style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.2)', padding: '0.5rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s ease' }}
                           title="Aprobar"
+                          onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(16, 185, 129, 0.2)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(16, 185, 129, 0.1)'; e.currentTarget.style.transform = 'translateY(0)'; }}
                         >
-                          <Check className="w-5 h-5" />
+                          <Check size={18} />
                         </button>
                         <button
                           onClick={() => handleVerify(tutor.userId, false)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '0.5rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s ease' }}
                           title="Rechazar"
+                          onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'; e.currentTarget.style.transform = 'translateY(0)'; }}
                         >
-                          <X className="w-5 h-5" />
+                          <X size={18} />
                         </button>
                       </div>
                     </td>

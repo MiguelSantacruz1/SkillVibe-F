@@ -20,7 +20,11 @@ const Login = () => {
       const { data } = await authApi.login({ email, password });
       login(data.token, data.user);
       toast.success('¡Bienvenido de nuevo!');
-      navigate('/dashboard');
+      if (data.user.role === 'ROLE_ADMIN' || data.user.role === 'ADMIN') {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err: unknown) {
       const message =
         (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??

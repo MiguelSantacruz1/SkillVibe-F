@@ -36,7 +36,9 @@ function NavBar() {
         <Link to="/" className="btn btn-primary" style={{ padding: '0.5rem 1rem', opacity: 0.75 }}>Inicio</Link>
         {isAuthenticated ? (
           <>
-            <Link to="/dashboard" className="btn btn-primary" style={{ padding: '0.5rem 1rem', opacity: 0.75 }}>Mis Clases</Link>
+            {user?.role !== 'ROLE_ADMIN' && (
+              <Link to="/dashboard" className="btn btn-primary" style={{ padding: '0.5rem 1rem', opacity: 0.75 }}>Mis Clases</Link>
+            )}
             {user?.role === 'ROLE_STUDENT' && (
               <Link to="/wallet" className="nav-link" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--accent-primary)', fontWeight: 600 }}>
                 <span style={{ background: 'rgba(168,85,247,0.1)', padding: '0.2rem 0.6rem', borderRadius: '50px' }}>
