@@ -216,6 +216,7 @@ const PostCard: React.FC<PostCardProps> = ({
               className="form-input"
               placeholder="Escribe un comentario..."
               value={commentText}
+              maxLength={COMMENT_MAX_CHARS}
               onChange={e => setCommentText(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleComment(); } }}
               style={{ flex: 1, padding: '0.5rem 0.9rem' }}
@@ -240,6 +241,9 @@ const PostCard: React.FC<PostCardProps> = ({
 };
 
 // ── Main Page ──────────────────────────────────────────────────────────────────
+
+const POST_MAX_CHARS = 500;
+const COMMENT_MAX_CHARS = 500;
 
 const CommunityFeed: React.FC = () => {
   const { user } = useAuth();
@@ -413,9 +417,21 @@ const CommunityFeed: React.FC = () => {
                   rows={3}
                   placeholder="¿Qué quieres compartir con la comunidad?"
                   value={newContent}
+                  maxLength={POST_MAX_CHARS}
                   onChange={e => setNewContent(e.target.value)}
                   style={{ resize: 'none', fontSize: '0.95rem' }}
                 />
+                <div style={{ textAlign: 'right', marginTop: '-0.4rem' }}>
+                  <span style={{
+                    fontSize: '0.78rem',
+                    fontWeight: 600,
+                    color: newContent.length > POST_MAX_CHARS * 0.9
+                      ? newContent.length >= POST_MAX_CHARS ? '#f87171' : '#fbbf24'
+                      : 'var(--text-muted)'
+                  }}>
+                    {newContent.length} / {POST_MAX_CHARS}
+                  </span>
+                </div>
                 <input
                   className="form-input"
                   type="url"
@@ -427,11 +443,11 @@ const CommunityFeed: React.FC = () => {
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                   <button
                     onClick={handlePost}
-                    disabled={posting || !newContent.trim()}
+                    disabled={posting || !newContent.trim() || newContent.length > POST_MAX_CHARS}
                     className="btn btn-primary"
                     style={{
                       padding: '0.5rem 1.5rem', fontSize: '0.9rem',
-                      opacity: (posting || !newContent.trim()) ? 0.6 : 1,
+                      opacity: (posting || !newContent.trim() || newContent.length > POST_MAX_CHARS) ? 0.6 : 1,
                       display: 'flex', alignItems: 'center', gap: '0.4rem'
                     }}>
                     {posting ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
