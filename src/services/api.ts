@@ -42,7 +42,11 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('skillvibes_token');
       localStorage.removeItem('skillvibes_user');
-      window.location.href = '/login';
+      
+      // No forzar recarga si ya estamos en la página de login
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }
