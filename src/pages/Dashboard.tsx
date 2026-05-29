@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { classesApi, tutorApi, type TutoringClass, type TutorProfile } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ReviewModal from '../components/ReviewModal';
+import toast from 'react-hot-toast';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -242,7 +243,16 @@ const Dashboard = () => {
                   )}
                   {tutoringClass.meetingLink && tutoringClass.status !== 'COMPLETED' && (
                     <button
-                      onClick={() => navigate(`/classroom/${tutoringClass.id}`)}
+                      onClick={() => {
+                        const classTime = new Date(tutoringClass.scheduledAt).getTime();
+                        const now = new Date().getTime();
+                        const fiveMinutes = 5 * 60 * 1000;
+                        if (now >= classTime - fiveMinutes) {
+                          window.open(tutoringClass.meetingLink, '_blank');
+                        } else {
+                          toast.error('La clase aún no ha comenzado. Podrás ingresar 5 minutos antes de la hora programada.');
+                        }
+                      }}
                       className="btn btn-primary"
                       style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}
                     >
