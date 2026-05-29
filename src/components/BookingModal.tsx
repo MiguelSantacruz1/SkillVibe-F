@@ -19,8 +19,18 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
+  const now = new Date();
+  const todayDateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const currentTimeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (formData.date === todayDateStr && formData.time < currentTimeStr) {
+      toast.error('No puedes seleccionar una hora en el pasado.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -91,10 +101,19 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
                     <input 
                       type="date" 
                       required 
+                      min={todayDateStr}
                       className="form-input" 
                       style={{ paddingLeft: '3rem' }}
                       value={formData.date}
-                      onChange={(e) => setFormData({...formData, date: e.target.value})}
+                      onChange={(e) => {
+                        const newDate = e.target.value;
+                        const shouldResetTime = newDate === todayDateStr && formData.time && formData.time < currentTimeStr;
+                        setFormData({
+                          ...formData, 
+                          date: newDate,
+                          time: shouldResetTime ? '' : formData.time
+                        });
+                      }}
                     />
                   </div>
                 </div>
@@ -105,6 +124,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
                     <input 
                       type="time" 
                       required 
+                      min={formData.date === todayDateStr ? currentTimeStr : undefined}
                       className="form-input" 
                       style={{ paddingLeft: '3rem' }}
                       value={formData.time}
