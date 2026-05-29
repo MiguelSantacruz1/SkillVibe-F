@@ -12,6 +12,8 @@ import {
   ChevronDown,
   Loader2,
   BookOpen,
+  ImageUp,
+  X,
 } from 'lucide-react';
 
 // ── helpers ────────────────────────────────────────────────────────────────────
@@ -170,6 +172,7 @@ const PostCard: React.FC<PostCardProps> = ({
         <img
           src={post.imageUrl}
           alt="Imagen de la publicación"
+          onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
           style={{ width: '100%', borderRadius: 10, marginBottom: '1.25rem', maxHeight: 360, objectFit: 'cover' }}
         />
       )}
@@ -432,14 +435,70 @@ const CommunityFeed: React.FC = () => {
                     {newContent.length} / {POST_MAX_CHARS}
                   </span>
                 </div>
-                <input
-                  className="form-input"
-                  type="url"
-                  placeholder="URL de imagen (opcional)"
-                  value={imageUrl}
-                  onChange={e => setImageUrl(e.target.value)}
-                  style={{ fontSize: '0.875rem', padding: '0.5rem 0.9rem' }}
-                />
+                {/* Image picker: file upload OR URL */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <label style={{
+                      display: 'flex', alignItems: 'center', gap: '0.4rem',
+                      padding: '0.45rem 0.9rem', borderRadius: 8, cursor: 'pointer',
+                      border: '1px dashed rgba(168,85,247,0.4)', fontSize: '0.82rem',
+                      color: '#a855f7', fontWeight: 600, whiteSpace: 'nowrap',
+                      background: 'rgba(168,85,247,0.06)', transition: 'all 0.2s'
+                    }}>
+                      <ImageUp size={15} />
+                      Subir imagen
+                      <input
+                        type="file"
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        onChange={e => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          if (file.size > 2 * 1024 * 1024) {
+                            toast.error('La imagen no puede pesar más de 2 MB.');
+                            return;
+                          }
+                          const reader = new FileReader();
+                          reader.onload = ev => setImageUrl(ev.target?.result as string);
+                          reader.readAsDataURL(file);
+                        }}
+                      />
+                    </label>
+                    <input
+                      className="form-input"
+                      type="url"
+                      placeholder="...o pega una URL de imagen"
+                      value={imageUrl.startsWith('data:') ? '' : imageUrl}
+                      onChange={e => setImageUrl(e.target.value)}
+                      style={{ fontSize: '0.82rem', padding: '0.45rem 0.9rem', flex: 1 }}
+                    />
+                  </div>
+                  {/* Preview */}
+                  {imageUrl && (
+                    <div style={{ position: 'relative', display: 'inline-block', width: '100%' }}>
+                      <img
+                        src={imageUrl}
+                        alt="Vista previa"
+                        onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                        style={{
+                          width: '100%', maxHeight: 200, objectFit: 'cover',
+                          borderRadius: 8, border: '1px solid rgba(168,85,247,0.3)'
+                        }}
+                      />
+                      <button
+                        onClick={() => setImageUrl('')}
+                        style={{
+                          position: 'absolute', top: 6, right: 6,
+                          background: 'rgba(0,0,0,0.6)', border: 'none',
+                          borderRadius: '50%', width: 24, height: 24,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          cursor: 'pointer', color: '#fff'
+                        }}>
+                        <X size={13} />
+                      </button>
+                    </div>
+                  )}
+                </div>
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                   <button
                     onClick={handlePost}
