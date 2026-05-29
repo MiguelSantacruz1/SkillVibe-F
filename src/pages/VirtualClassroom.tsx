@@ -163,7 +163,7 @@ const VirtualClassroom = () => {
     <div className="classroom-layout">
       
       {/* Main Area: Video + Board */}
-      <div className="classroom-main" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', overflow: 'hidden' }}>
+      <div className="classroom-main" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', overflow: 'hidden', height: '100%' }}>
         
         {/* Header Controls */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(30,41,59,0.5)', padding: '0.75rem 1.5rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>
@@ -179,7 +179,7 @@ const VirtualClassroom = () => {
         </div>
 
         {/* Board Area */}
-        <div id="canvas-container" style={{ flex: 1, background: 'white', borderRadius: '16px', overflow: 'hidden', position: 'relative', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.3)' }}>
+        <div id="canvas-container" style={{ flex: 1, minHeight: '400px', background: 'white', borderRadius: '16px', overflow: 'hidden', position: 'relative', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.3)' }}>
           <ReactSketchCanvas
             ref={canvasRef}
             strokeWidth={4}
