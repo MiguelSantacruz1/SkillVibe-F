@@ -90,8 +90,10 @@ const Dashboard = () => {
   };
 
   const filtered = classes.filter((t) =>
-    t.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    t.description?.toLowerCase().includes(searchTerm.toLowerCase())
+    t.status !== 'CANCELLED' && (
+      t.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      t.description?.toLowerCase().includes(searchTerm.toLowerCase())
+    )
   );
 
   const statusColor: Record<string, string> = {
