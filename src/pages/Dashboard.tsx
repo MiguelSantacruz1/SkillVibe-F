@@ -284,20 +284,7 @@ const Dashboard = () => {
                       <button
                         onClick={() => {
                           if (now >= classTime - fiveMin) {
-                            let finalLink = tutoringClass.meetingLink;
-                            let roomId = "";
-                            if (finalLink.startsWith('http')) {
-                              const parts = finalLink.split('/');
-                              roomId = parts[parts.length - 1];
-                            } else {
-                              const parts = finalLink.split('/');
-                              roomId = parts[parts.length - 1];
-                            }
-                            
-                            const host = import.meta.env.VITE_CLASSROOM_HOST || window.location.origin;
-                            const targetUrl = `${host.replace(/\/$/, '')}/classroom/${roomId}`;
-                            
-                            window.open(targetUrl, '_blank');
+                            window.open(tutoringClass.meetingLink, '_blank');
                           } else {
                             toast.error('La clase aún no ha comenzado. Podrás ingresar 5 minutos antes de la hora programada.');
                           }
