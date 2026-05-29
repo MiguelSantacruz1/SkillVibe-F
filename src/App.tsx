@@ -66,8 +66,8 @@ function NavBar() {
                 </span>
               </Link>
             )}
-            {user?.role === 'ROLE_TUTOR' && (
-              <Link to="/tutor/settings" className="btn btn-primary" style={{ padding: '0.5rem 1rem', opacity: 0.75 }}>Configuración de Perfil</Link>
+            {(user?.role === 'TUTOR' || user?.role === 'ROLE_TUTOR') && (
+              <Link to="/tutor/settings" className="btn btn-primary" style={{ padding: '0.5rem 1rem', opacity: 0.75 }}>Mi Perfil</Link>
             )}
             {(user?.role === 'ROLE_ADMIN' || user?.role === 'ADMIN') && (
               <Link to="/admin" className="btn btn-primary" style={{ padding: '0.5rem 1rem', opacity: 0.75 }}>Panel de Admin</Link>

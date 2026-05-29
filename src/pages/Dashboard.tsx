@@ -374,7 +374,6 @@ const Dashboard = () => {
                   <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', maxWidth: '500px', margin: '0 auto 2rem auto' }}>
                     Aún no tienes clases programadas con estudiantes. Optimiza tu perfil y prepárate para compartir tu conocimiento.
                   </p>
-                  <button className="btn btn-primary" style={{ padding: '0.75rem 1.5rem' }} onClick={() => navigate('/tutor/settings')}>Completar mi perfil</button>
                 </div>
 
                 {profile && profile.subjects && profile.subjects.length > 0 && (
