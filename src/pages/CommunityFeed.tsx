@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
-import {
-  postsApi,
-  CommunityPost,
-  PostComment,
-} from '../services/api';
+import { postsApi } from '../services/api';
+import type { CommunityPost, PostComment } from '../services/api';
 import toast from 'react-hot-toast';
 import {
   Heart,
