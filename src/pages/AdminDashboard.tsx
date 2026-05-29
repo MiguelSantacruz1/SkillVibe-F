@@ -7,7 +7,8 @@ import toast from 'react-hot-toast';
 const AdminDashboard: React.FC = () => {
   const [pendingTutors, setPendingTutors] = useState<TutorProfile[]>([]);
   const [verifiedTutors, setVerifiedTutors] = useState<TutorProfile[]>([]);
-  const [stats, setStats] = useState<unknown>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {

@@ -23,7 +23,8 @@ const Dashboard = () => {
     tutorApi
       .search({ size: 3, sort: 'averageRating,desc', onlyVerified: false })
       .then((res) => {
-        const data = res.data as unknown;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const data = res.data as any;
         const list: TutorProfile[] = data?.content ?? (Array.isArray(data) ? data : []);
         setFeaturedTutors(list.slice(0, 3));
       })

@@ -17,7 +17,8 @@ const ForgotPassword: React.FC = () => {
     try {
       await api.post('/auth/forgot-password', { email });
       setSent(true);
-    } catch {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
       setError(err.response?.data?.message || 'Ocurrió un error. Inténtalo de nuevo.');
     } finally {
       setLoading(false);

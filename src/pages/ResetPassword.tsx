@@ -35,7 +35,8 @@ const ResetPassword: React.FC = () => {
       await api.post('/auth/reset-password', { token, newPassword });
       setSuccess(true);
       setTimeout(() => navigate('/login'), 3000);
-    } catch {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
       setTokenInvalid(true);
       setError(err.response?.data?.message || 'El enlace expiró o no es válido. Solicita uno nuevo.');
     } finally {

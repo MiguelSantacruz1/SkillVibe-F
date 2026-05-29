@@ -8,7 +8,8 @@ const AddBalance = () => {
   const { user, fetchUserData } = useAuth();
   const [amount, setAmount] = useState<number>(50000);
   const [loading, setLoading] = useState(false);
-  const [history, setHistory] = useState<unknown[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [history, setHistory] = useState<any[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
 
   const loadHistory = async () => {
