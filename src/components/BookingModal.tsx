@@ -24,12 +24,12 @@ const BookingModal: React.FC<BookingModalProps> = ({ tutor, onClose, onSuccess }
     setLoading(true);
 
     try {
-      const fechaHora = `${formData.date}T${formData.time}:00`;
+      const scheduledAt = `${formData.date}T${formData.time}:00`;
       await classesApi.book({
         tutorId: tutor.userId,
         subject: formData.subject,
         description: formData.description,
-        fechaHora
+        scheduledAt
       });
       setSuccess(true);
       toast.success('¡Reserva confirmada!');

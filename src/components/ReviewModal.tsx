@@ -28,7 +28,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ tutoringClassId, tutorName, i
 
     setIsSubmitting(true);
     try {
-      await reviewApi.create({ tutoriaId: tutoringClassId, rating, comment });
+      await reviewApi.create({ tutoringClassId, rating, comment });
       toast.success('¡Reseña enviada con éxito!');
       onSuccess();
       onClose();

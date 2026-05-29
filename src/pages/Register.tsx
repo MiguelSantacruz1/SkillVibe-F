@@ -11,7 +11,7 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState<'STUDENT' | 'TUTOR'>('STUDENT');
 
-  // Campos extra para Tutor
+  // Extra fields for Tutor
   const [bio, setBio] = useState('');
   const [profilePictureUrl, setProfilePictureUrl] = useState('');
   const [identityCardUrl, setIdentityCardUrl] = useState('');

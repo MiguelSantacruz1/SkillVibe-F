@@ -7,7 +7,7 @@ import SockJS from 'sockjs-client';
 import axios from 'axios';
 import html2canvas from 'html2canvas';
 
-// Configuración de la API externa (Smart Edu)
+// External API configuration (Smart Edu)
 const SMART_EDU_API_URL = 'http://localhost:8081'; 
 
 const VirtualClassroom = () => {
@@ -19,7 +19,7 @@ const VirtualClassroom = () => {
   const canvasRef = useRef<any>(null);
   const stompClient = useRef<Client | null>(null);
 
-  // 1. Conectar a los WebSockets de Smart Edu
+  // 1. Connect to Smart Edu WebSockets
   useEffect(() => {
     const socket = new SockJS(`${SMART_EDU_API_URL}/ws-board`);
     const client = new Client({
@@ -27,7 +27,7 @@ const VirtualClassroom = () => {
       debug: (str) => console.log(str),
       onConnect: () => {
         setConnected(true);
-        // Suscribirse a los eventos de la sala
+        // Subscribe to room events
         client.subscribe(`/topic/room/${roomId}/board`, (message) => {
           const event = JSON.parse(message.body);
           if (event.action === 'add' && event.element?.type === 'path') {
@@ -77,7 +77,7 @@ const VirtualClassroom = () => {
     }
   };
 
-  // 3. Consumir la IA de Smart Edu
+  // 3. Consume Smart Edu AI
   const handleAnalyze = async () => {
     const canvasContainer = document.getElementById('canvas-container');
     if (!canvasContainer) return;
@@ -87,9 +87,9 @@ const VirtualClassroom = () => {
       const canvas = await html2canvas(canvasContainer);
       const base64Image = canvas.toDataURL('image/png').split(',')[1];
 
-      // Llamada a la API de Smart Edu
+      // Smart Edu API call
       const response = await axios.post(`${SMART_EDU_API_URL}/api/exercises/analyze`, {
-        subject: 'Matemáticas', // Podríamos hacerlo dinámico
+        subject: 'Matemáticas', // We could make this dynamic
         base64Image: base64Image
       });
 

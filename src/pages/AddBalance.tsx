@@ -32,8 +32,8 @@ const AddBalance = () => {
     try {
       await paymentApi.createCheckout(amount);
       toast.success(`Recarga simulada exitosa por $${amount.toLocaleString('es-CO')} COP`);
-      await fetchUserData(); // Refrescar el saldo
-      await loadHistory();   // Refrescar el historial
+      await fetchUserData(); // Refresh balance
+      await loadHistory();   // Refresh history
     } catch (err) {
       toast.error("Error al procesar la recarga.");
     } finally {
@@ -52,7 +52,7 @@ const AddBalance = () => {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '2rem' }}>
         
-        {/* Tarjeta de Recarga */}
+        {/* Recharge Card */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           <div className="glass-card" style={{ padding: '2rem', textAlign: 'center', background: 'linear-gradient(135deg, rgba(168,85,247,0.1) 0%, rgba(236,72,153,0.1) 100%)' }}>
             <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>Saldo Disponible</p>
@@ -116,7 +116,7 @@ const AddBalance = () => {
           </div>
         </div>
 
-        {/* Tarjeta de Historial */}
+        {/* History Card */}
         <div className="glass-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column' }}>
           <h3 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <History size={20} color="var(--accent-primary)" /> Historial de Transacciones

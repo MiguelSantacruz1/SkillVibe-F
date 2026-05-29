@@ -26,7 +26,7 @@ const Home = () => {
           src="/logo1.jpg" 
           alt="Watermark" 
           style={{ 
-            width: '900px', // Mas grande
+            width: '900px', // Larger
             maxWidth: '100vw', 
             filter: 'invert(1) grayscale(100%) contrast(150%)' // Invert to turn white bg into black
           }} 

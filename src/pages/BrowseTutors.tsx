@@ -260,7 +260,7 @@ const BrowseTutors = () => {
           tutor={selectedTutor} 
           onClose={() => setSelectedTutor(null)} 
           onSuccess={() => {
-            // Podríamos actualizar el balance del usuario aquí si lo tuviéramos en un contexto global
+            // We could update the user's balance here if we had it in a global context
             console.log('Booking successful!');
           }}
         />

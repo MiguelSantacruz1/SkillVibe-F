@@ -2,13 +2,13 @@ import axios from 'axios';
 
 let rawBaseURL = import.meta.env.VITE_API_URL || 'https://skillvibe-b-production.up.railway.app';
 
-// Si la variable de entorno se configuró sin https:// (ej. skillvibe-b...), Axios la toma como ruta relativa.
-// Le agregamos https:// automáticamente si no empieza con http o /
+// If the env variable was configured without https:// (e.g. skillvibe-b...), Axios takes it as relative.
+// Automatically add https:// if it doesn't start with http or /
 if (rawBaseURL && !rawBaseURL.startsWith('http') && !rawBaseURL.startsWith('/')) {
   rawBaseURL = 'https://' + rawBaseURL;
 }
 
-// Quitar slash final si lo tiene para evitar errores de doble slash (//api)
+// Remove trailing slash to avoid double slash errors (//api)
 const cleanBaseURL = rawBaseURL.replace(/\/+$/, '');
 
 // Base URL from env variable (for Vercel) or fallback to production backend
@@ -31,7 +31,7 @@ api.interceptors.request.use((config) => {
 // If the server returns 401, clear session and redirect to login
 api.interceptors.response.use(
   (response) => {
-    // Desenvuelve el ApiResponse del backend automáticamente
+    // Automatically unwrap the backend ApiResponse
     if (response.data && typeof response.data.success === 'boolean') {
       return { ...response, data: response.data.data };
     }
@@ -108,7 +108,7 @@ export interface TutoringClass {
   subject: string;
   description: string;
   price: number;
-  fechaHora: string; // ISO string from backend
+  scheduledAt: string; // ISO string from backend
   meetingLink: string;
   status: string; // "PROGRAMMED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED"
   tutor: UserResponseDTO;
@@ -119,7 +119,7 @@ export interface CreateClassRequest {
   subject: string;
   description: string;
   price: number;
-  fechaHora: string;
+  scheduledAt: string;
   meetingLink: string;
   tutor: { id: number };
   student: { id: number };
@@ -129,7 +129,7 @@ export interface BookingRequest {
   tutorId: number;
   subject: string;
   description: string;
-  fechaHora: string;
+  scheduledAt: string;
 }
 
 export const classesApi = {
@@ -206,17 +206,17 @@ export const paymentApi = {
 // ── Reviews ──────────────────────────────────────────────────────────────────
 
 export interface CreateReviewDTO {
-  tutoriaId: number;
+  tutoringClassId: number;
   rating: number;
   comment: string;
 }
 
 export interface ReviewResponseDTO {
   id: number;
-  tutoriaId: number;
+  tutoringClassId: number;
   tutorId: number;
-  estudianteId: number;
-  estudianteNombre: string;
+  studentId: number;
+  studentName: string;
   rating: number;
   comment: string;
   createdAt: string;

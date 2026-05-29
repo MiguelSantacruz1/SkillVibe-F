@@ -206,11 +206,11 @@ const Dashboard = () => {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <Calendar size={15} />
-                    <span>{new Date(tutoringClass.fechaHora).toLocaleDateString('es-CO', { dateStyle: 'medium' })}</span>
+                    <span>{new Date(tutoringClass.scheduledAt).toLocaleDateString('es-CO', { dateStyle: 'medium' })}</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <Clock size={15} />
-                    <span>{new Date(tutoringClass.fechaHora).toLocaleTimeString('es-CO', { timeStyle: 'short' })}</span>
+                    <span>{new Date(tutoringClass.scheduledAt).toLocaleTimeString('es-CO', { timeStyle: 'short' })}</span>
                   </div>
                 </div>
 
