@@ -25,6 +25,12 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
   return children;
 }
 
+function PublicRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useAuth();
+  if (isAuthenticated) return <Navigate to="/dashboard" replace />;
+  return children;
+}
+
 function NavBar() {
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
@@ -129,8 +135,8 @@ function App() {
             <main className="main-content">
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+                <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/browse" element={<BrowseTutors />} />
                 <Route path="/classroom/:id" element={<VirtualClassroom />} />
