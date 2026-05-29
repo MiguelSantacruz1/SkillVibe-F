@@ -277,4 +277,61 @@ export const adminApi = {
     api.get<any>('/admin/stats'),
 };
 
+// ── Community Posts ──────────────────────────────────────────────────────────
+
+export interface PostComment {
+  id: number;
+  authorId: number;
+  authorName: string;
+  authorRole: string;
+  content: string;
+  createdAt: string;
+}
+
+export interface CommunityPost {
+  id: number;
+  authorId: number;
+  authorName: string;
+  authorRole: string;
+  content: string;
+  imageUrl?: string;
+  likesCount: number;
+  featured: boolean;
+  comments: PostComment[];
+  createdAt: string;
+}
+
+export interface CreatePostRequest {
+  content: string;
+  imageUrl?: string;
+}
+
+export interface CreateCommentRequest {
+  content: string;
+}
+
+export const postsApi = {
+  getFeed: (page: number = 0, size: number = 10) =>
+    api.get<PageResponse<CommunityPost>>('/posts', { params: { page, size } }),
+
+  getFeatured: () =>
+    api.get<CommunityPost[]>('/posts/featured'),
+
+  create: (data: CreatePostRequest) =>
+    api.post<CommunityPost>('/posts', data),
+
+  delete: (postId: number) =>
+    api.delete<void>(`/posts/${postId}`),
+
+  addComment: (postId: number, data: CreateCommentRequest) =>
+    api.post<PostComment>(`/posts/${postId}/comments`, data),
+
+  like: (postId: number) =>
+    api.put<CommunityPost>(`/posts/${postId}/like`),
+
+  toggleFeatured: (postId: number) =>
+    api.put<CommunityPost>(`/posts/${postId}/featured`),
+};
+
 export default api;
+
