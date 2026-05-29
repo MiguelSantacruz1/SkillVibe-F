@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 
-let rawBaseURL = import.meta.env.VITE_API_URL || 'https://skillvibe-b-production.up.railway.app';
+let rawBaseURL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 // If the env variable was configured without https:// (e.g. skillvibe-b...), Axios takes it as relative.
 // Automatically add https:// if it doesn't start with http or /
