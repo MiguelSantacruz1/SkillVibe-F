@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 const AdminDashboard: React.FC = () => {
   const [pendingTutors, setPendingTutors] = useState<TutorProfile[]>([]);
   const [verifiedTutors, setVerifiedTutors] = useState<TutorProfile[]>([]);
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<unknown>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
@@ -20,7 +20,7 @@ const AdminDashboard: React.FC = () => {
       setPendingTutors(pendingRes.data);
       setVerifiedTutors(verifiedRes.data);
       setStats(statsRes.data);
-    } catch (error) {
+    } catch {
       toast.error('Error al cargar el panel de administrador');
     } finally {
       setLoading(false);
@@ -28,6 +28,7 @@ const AdminDashboard: React.FC = () => {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchData();
   }, []);
 
@@ -36,7 +37,7 @@ const AdminDashboard: React.FC = () => {
       await adminApi.verifyTutor(id, { verified });
       toast.success(`Tutor ${verified ? 'aprobado' : 'rechazado'} con éxito`);
       fetchData(); // Refresh lists
-    } catch (error) {
+    } catch {
       toast.error('Error al actualizar el estado del tutor');
     }
   };

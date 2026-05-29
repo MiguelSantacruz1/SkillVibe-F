@@ -10,19 +10,18 @@ const TutorSettings = () => {
   const [newSubject, setNewSubject] = useState('');
 
   useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const { data } = await tutorApi.getMyProfile();
+        setProfile(data);
+      } catch {
+        toast.error('Error al cargar el perfil.');
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchProfile();
   }, []);
-
-  const fetchProfile = async () => {
-    try {
-      const { data } = await tutorApi.getMyProfile();
-      setProfile(data);
-    } catch (err) {
-      toast.error('Error al cargar el perfil.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +39,7 @@ const TutorSettings = () => {
         profilePictureUrl: profile.profilePictureUrl
       });
       toast.success('Perfil actualizado con éxito.');
-    } catch (err) {
+    } catch {
       toast.error('Error al actualizar el perfil.');
     } finally {
       setSaving(false);

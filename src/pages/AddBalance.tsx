@@ -8,13 +8,8 @@ const AddBalance = () => {
   const { user, fetchUserData } = useAuth();
   const [amount, setAmount] = useState<number>(50000);
   const [loading, setLoading] = useState(false);
-  const [history, setHistory] = useState<any[]>([]);
+  const [history, setHistory] = useState<unknown[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
-
-  useEffect(() => {
-    loadHistory();
-    fetchUserData();
-  }, []);
 
   const loadHistory = async () => {
     try {
@@ -27,6 +22,14 @@ const AddBalance = () => {
     }
   };
 
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadHistory();
+     
+    fetchUserData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleRecharge = async () => {
     setLoading(true);
     try {
@@ -34,7 +37,7 @@ const AddBalance = () => {
       toast.success(`Recarga simulada exitosa por $${amount.toLocaleString('es-CO')} COP`);
       await fetchUserData(); // Refresh balance
       await loadHistory();   // Refresh history
-    } catch (err) {
+    } catch {
       toast.error("Error al procesar la recarga.");
     } finally {
       setLoading(false);
