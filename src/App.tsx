@@ -33,10 +33,12 @@ function NavBar() {
         SkillVibes
       </Link>
       <div className="nav-links" style={{ alignItems: 'center' }}>
-        <Link to="/" className="btn btn-primary" style={{ padding: '0.5rem 1rem', opacity: 0.75 }}>Inicio</Link>
+        {(user?.role !== 'ROLE_ADMIN' && user?.role !== 'ADMIN') && (
+          <Link to="/" className="btn btn-primary" style={{ padding: '0.5rem 1rem', opacity: 0.75 }}>Inicio</Link>
+        )}
         {isAuthenticated ? (
           <>
-            {user?.role !== 'ROLE_ADMIN' && (
+            {(user?.role !== 'ROLE_ADMIN' && user?.role !== 'ADMIN') && (
               <Link to="/dashboard" className="btn btn-primary" style={{ padding: '0.5rem 1rem', opacity: 0.75 }}>Mis Clases</Link>
             )}
             {user?.role === 'ROLE_STUDENT' && (
@@ -49,7 +51,7 @@ function NavBar() {
             {user?.role === 'ROLE_TUTOR' && (
               <Link to="/tutor/settings" className="btn btn-primary" style={{ padding: '0.5rem 1rem', opacity: 0.75 }}>Configuración de Perfil</Link>
             )}
-            {user?.role === 'ROLE_ADMIN' && (
+            {(user?.role === 'ROLE_ADMIN' || user?.role === 'ADMIN') && (
               <Link to="/admin" className="btn btn-primary" style={{ padding: '0.5rem 1rem', opacity: 0.75 }}>Panel de Admin</Link>
             )}
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', borderLeft: '1px solid var(--border-color)', paddingLeft: '1rem', marginLeft: '0.5rem' }}>
