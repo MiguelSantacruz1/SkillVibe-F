@@ -33,9 +33,7 @@ function NavBar() {
         SkillVibes
       </Link>
       <div className="nav-links" style={{ alignItems: 'center' }}>
-        {(user?.role !== 'ROLE_ADMIN' && user?.role !== 'ADMIN') && (
-          <Link to="/" className="btn btn-primary" style={{ padding: '0.5rem 1rem', opacity: 0.75 }}>Inicio</Link>
-        )}
+        <Link to="/" className="btn btn-primary" style={{ padding: '0.5rem 1rem', opacity: 0.75 }}>Inicio</Link>
         {isAuthenticated ? (
           <>
             {(user?.role !== 'ROLE_ADMIN' && user?.role !== 'ADMIN') && (
