@@ -186,12 +186,13 @@ const PostCard: React.FC<PostCardProps> = ({
           onClick={() => onLike(post.id)}
           style={{
             display: 'flex', alignItems: 'center', gap: '0.4rem',
-            background: 'transparent', border: '1px solid rgba(239,68,68,0.25)',
+            background: post.likedByMe ? 'rgba(239,68,68,0.1)' : 'transparent',
+            border: '1px solid rgba(239,68,68,0.25)',
             borderRadius: 8, color: '#f87171', cursor: 'pointer',
             padding: '0.35rem 0.9rem', fontSize: '0.85rem', fontWeight: 600,
             transition: 'all 0.2s'
           }}>
-          <Heart size={15} /> {post.likesCount}
+          <Heart size={15} fill={post.likedByMe ? 'currentColor' : 'none'} /> {post.likesCount}
         </button>
 
         <button
@@ -214,28 +215,41 @@ const PostCard: React.FC<PostCardProps> = ({
           {post.comments.map(c => <CommentBlock key={c.id} comment={c} />)}
 
           {/* New comment input */}
-          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
-            <input
-              className="form-input"
-              placeholder="Escribe un comentario..."
-              value={commentText}
-              maxLength={COMMENT_MAX_CHARS}
-              onChange={e => setCommentText(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleComment(); } }}
-              style={{ flex: 1, padding: '0.5rem 0.9rem' }}
-            />
-            <button
-              onClick={handleComment}
-              disabled={submitting || !commentText.trim()}
-              style={{
-                background: 'linear-gradient(135deg,#6366f1,#a855f7)',
-                border: 'none', borderRadius: 8, color: '#fff',
-                padding: '0.5rem 0.9rem', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', transition: 'opacity 0.2s',
-                opacity: (submitting || !commentText.trim()) ? 0.5 : 1
+          <div style={{ marginTop: '0.75rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <input
+                className="form-input"
+                placeholder="Escribe un comentario..."
+                value={commentText}
+                maxLength={COMMENT_MAX_CHARS}
+                onChange={e => setCommentText(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleComment(); } }}
+                style={{ flex: 1, padding: '0.5rem 0.9rem' }}
+              />
+              <button
+                onClick={handleComment}
+                disabled={submitting || !commentText.trim() || commentText.length > COMMENT_MAX_CHARS}
+                style={{
+                  background: 'linear-gradient(135deg,#6366f1,#a855f7)',
+                  border: 'none', borderRadius: 8, color: '#fff',
+                  padding: '0.5rem 0.9rem', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', transition: 'opacity 0.2s',
+                  opacity: (submitting || !commentText.trim() || commentText.length > COMMENT_MAX_CHARS) ? 0.5 : 1
+                }}>
+                {submitting ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+              </button>
+            </div>
+            <div style={{ textAlign: 'right', marginTop: '0.2rem', paddingRight: '3rem' }}>
+              <span style={{
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                color: commentText.length > COMMENT_MAX_CHARS * 0.9
+                  ? commentText.length >= COMMENT_MAX_CHARS ? '#f87171' : '#fbbf24'
+                  : 'var(--text-muted)'
               }}>
-              {submitting ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
-            </button>
+                {commentText.length} / {COMMENT_MAX_CHARS}
+              </span>
+            </div>
           </div>
         </div>
       )}
@@ -246,7 +260,7 @@ const PostCard: React.FC<PostCardProps> = ({
 // ── Main Page ──────────────────────────────────────────────────────────────────
 
 const POST_MAX_CHARS = 500;
-const COMMENT_MAX_CHARS = 500;
+const COMMENT_MAX_CHARS = 200;
 
 const CommunityFeed: React.FC = () => {
   const { user } = useAuth();
@@ -308,7 +322,18 @@ const CommunityFeed: React.FC = () => {
     try {
       const res = await postsApi.like(postId);
       const updated = res.data as unknown as CommunityPost;
-      setPosts(prev => prev.map(p => p.id === postId ? { ...p, likesCount: updated.likesCount } : p));
+      setPosts(prev => prev.map(p => p.id === postId ? { 
+        ...p, 
+        likesCount: updated.likesCount,
+        likedByMe: updated.likedByMe 
+      } : p));
+      
+      // Update featured if it's there
+      setFeatured(prev => prev.map(p => p.id === postId ? {
+        ...p,
+        likesCount: updated.likesCount,
+        likedByMe: updated.likedByMe
+      } : p));
     } catch { /* silencioso */ }
   };
 

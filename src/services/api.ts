@@ -296,6 +296,7 @@ export interface CommunityPost {
   content: string;
   imageUrl?: string;
   likesCount: number;
+  likedByMe: boolean;
   featured: boolean;
   comments: PostComment[];
   createdAt: string;
