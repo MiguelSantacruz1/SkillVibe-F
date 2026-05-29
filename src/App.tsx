@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -16,6 +17,13 @@ import { Toaster } from 'react-hot-toast';
 import { NotificationProvider } from './context/NotificationContext';
 import NotificationBell from './components/NotificationBell';
 import './App.css';
+
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, user } = useAuth();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (user?.role !== 'ROLE_ADMIN' && user?.role !== 'ADMIN') return <Navigate to="/" replace />;
+  return children;
+}
 
 function NavBar() {
   const { isAuthenticated, user, logout } = useAuth();
@@ -128,7 +136,7 @@ function App() {
                 <Route path="/classroom/:id" element={<VirtualClassroom />} />
                 <Route path="/tutor/settings" element={<TutorSettings />} />
                 <Route path="/wallet" element={<AddBalance />} />
-                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
                 <Route path="/verify-email" element={<VerifyEmail />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />

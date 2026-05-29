@@ -124,7 +124,7 @@ const Register = () => {
               <input
                 type={showPassword ? "text" : "password"} id="reg-password" className="form-input"
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Mínimo 6 caracteres" minLength={6} maxLength={50} required autoComplete="new-password"
+                placeholder="Mínimo 8 caracteres" minLength={8} maxLength={50} required autoComplete="new-password"
                 style={{ paddingRight: '2.5rem' }}
               />
               <button
