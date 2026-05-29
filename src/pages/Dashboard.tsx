@@ -15,6 +15,8 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [selectedClassForReview, setSelectedClassForReview] = useState<{ id: number, tutorName: string } | null>(null);
   const [featuredTutors, setFeaturedTutors] = useState<TutorProfile[]>([]);
@@ -42,8 +44,10 @@ const Dashboard = () => {
     const fetchBoard = async () => {
       try {
         setLoading(true);
-        const { data } = await classesApi.getMyBoard(user.id);
-        setClasses(data);
+        const { data } = await classesApi.getMyBoard(user.id, page, 10);
+        const paged = data as { content: TutoringClass[]; totalPages: number };
+        setClasses(paged.content ?? []);
+        setTotalPages(paged.totalPages ?? 1);
         if (user.role === 'TUTOR') {
           const profileRes = await tutorApi.getMyProfile();
           setProfile(profileRes.data);
@@ -56,7 +60,7 @@ const Dashboard = () => {
     };
 
     fetchBoard();
-  }, [user, navigate]);
+  }, [user, navigate, page]);
 
 
   const handleFinalize = async (id: number) => {
@@ -241,24 +245,29 @@ const Dashboard = () => {
                       Calificar
                     </button>
                   )}
-                  {tutoringClass.meetingLink && tutoringClass.status !== 'COMPLETED' && (
-                    <button
-                      onClick={() => {
-                        const classTime = new Date(tutoringClass.scheduledAt).getTime();
-                        const now = new Date().getTime();
-                        const fiveMinutes = 5 * 60 * 1000;
-                        if (now >= classTime - fiveMinutes) {
-                          window.open(tutoringClass.meetingLink, '_blank');
-                        } else {
-                          toast.error('La clase aún no ha comenzado. Podrás ingresar 5 minutos antes de la hora programada.');
-                        }
-                      }}
-                      className="btn btn-primary"
-                      style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}
-                    >
-                      Unirse
-                    </button>
-                  )}
+                  {tutoringClass.meetingLink && tutoringClass.status !== 'COMPLETED' && (() => {
+                    const classTime = new Date(tutoringClass.scheduledAt).getTime();
+                    const now = new Date().getTime();
+                    const fiveMin = 5 * 60 * 1000;
+                    const twoHours = 2 * 60 * 60 * 1000;
+                    const isAccessible = now >= classTime - fiveMin && now <= classTime + twoHours;
+                    if (!isAccessible) return null;
+                    return (
+                      <button
+                        onClick={() => {
+                          if (now >= classTime - fiveMin) {
+                            window.open(tutoringClass.meetingLink, '_blank');
+                          } else {
+                            toast.error('La clase aún no ha comenzado. Podrás ingresar 5 minutos antes de la hora programada.');
+                          }
+                        }}
+                        className="btn btn-primary"
+                        style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}
+                      >
+                        Unirse
+                      </button>
+                    );
+                  })()}
                 </div>
               </div>
             ))}
@@ -393,6 +402,29 @@ const Dashboard = () => {
               </div>
             )}
           </div>
+
+          {/* Paginación */}
+          {totalPages > 1 && (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginTop: '1.5rem' }}>
+              <button
+                className="btn"
+                disabled={page === 0}
+                onClick={() => setPage(p => p - 1)}
+                style={{ padding: '0.5rem 1.5rem', border: '1px solid var(--border-color)', background: 'transparent', color: page === 0 ? 'var(--text-muted)' : 'var(--text-color)', cursor: page === 0 ? 'not-allowed' : 'pointer' }}
+              >
+                ← Anterior
+              </button>
+              <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Página {page + 1} de {totalPages}</span>
+              <button
+                className="btn"
+                disabled={page >= totalPages - 1}
+                onClick={() => setPage(p => p + 1)}
+                style={{ padding: '0.5rem 1.5rem', border: '1px solid var(--border-color)', background: 'transparent', color: page >= totalPages - 1 ? 'var(--text-muted)' : 'var(--text-color)', cursor: page >= totalPages - 1 ? 'not-allowed' : 'pointer' }}
+              >
+                Siguiente →
+              </button>
+            </div>
+          )}
         </>
       )}
 
@@ -404,7 +436,11 @@ const Dashboard = () => {
           tutorName={selectedClassForReview.tutorName}
           onSuccess={() => {
             // Refresh dashboard
-            classesApi.getMyBoard(user!.id).then(res => setClasses(res.data));
+            classesApi.getMyBoard(user!.id, page, 10).then(res => {
+              const paged = res.data as { content: TutoringClass[]; totalPages: number };
+              setClasses(paged.content ?? []);
+              setTotalPages(paged.totalPages ?? 1);
+            });
           }}
         />
       )}

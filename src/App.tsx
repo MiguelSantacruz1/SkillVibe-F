@@ -14,6 +14,7 @@ import VerifyEmail from './pages/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import CommunityFeed from './pages/CommunityFeed';
+import StudentProfile from './pages/StudentProfile';
 import { Toaster } from 'react-hot-toast';
 import { NotificationProvider } from './context/NotificationContext';
 import NotificationBell from './components/NotificationBell';
@@ -55,6 +56,9 @@ function NavBar() {
               <Link to="/dashboard" className="btn btn-primary" style={{ padding: '0.5rem 1rem', opacity: 0.75 }}>Mis Clases</Link>
             )}
             <Link to="/community" className="btn btn-primary" style={{ padding: '0.5rem 1rem', opacity: 0.75 }}>Comunidad</Link>
+            {(user?.role === 'STUDENT' || user?.role === 'ROLE_STUDENT') && (
+              <Link to="/student/profile" className="btn btn-primary" style={{ padding: '0.5rem 1rem', opacity: 0.75 }}>Mi Perfil</Link>
+            )}
             {user?.role === 'ROLE_STUDENT' && (
               <Link to="/wallet" className="nav-link" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--accent-primary)', fontWeight: 600 }}>
                 <span style={{ background: 'rgba(168,85,247,0.1)', padding: '0.2rem 0.6rem', borderRadius: '50px' }}>
@@ -149,6 +153,7 @@ function App() {
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/community" element={<CommunityFeed />} />
+                <Route path="/student/profile" element={<StudentProfile />} />
               </Routes>
             </main>
           </div>

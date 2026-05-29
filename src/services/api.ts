@@ -134,8 +134,10 @@ export interface BookingRequest {
 }
 
 export const classesApi = {
-  getMyBoard: (userId: number) =>
-    api.get<TutoringClass[]>(`/tutoringClasses/mi-tablero/${userId}`),
+  getMyBoard: (userId: number, page = 0, size = 10) =>
+    api.get<{ content: TutoringClass[]; totalPages: number; totalElements: number; number: number }>(
+      `/tutoringClasses/mi-tablero/${userId}`, { params: { page, size } }
+    ),
 
   create: (data: CreateClassRequest) =>
     api.post<TutoringClass>('/tutoringClasses/programar', data),
@@ -332,6 +334,30 @@ export const postsApi = {
 
   toggleFeatured: (postId: number) =>
     api.put<CommunityPost>(`/posts/${postId}/featured`),
+};
+
+// ── Student Profile ──────────────────────────────────────────────────────────────────────────────────────
+
+export interface StudentProfileDTO {
+  id: number;
+  bio: string | null;
+  profilePictureUrl: string | null;
+  interests: string[];
+  user: { id: number; fullName: string; email: string; balance: number };
+}
+
+export interface UpdateStudentProfileRequest {
+  bio?: string;
+  profilePictureUrl?: string;
+  interests?: string[];
+}
+
+export const studentApi = {
+  getProfile: () =>
+    api.get<StudentProfileDTO>('/student/profile'),
+
+  updateProfile: (data: UpdateStudentProfileRequest) =>
+    api.put<StudentProfileDTO>('/student/profile', data),
 };
 
 export default api;

@@ -6,19 +6,36 @@ import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import axios from 'axios';
 import html2canvas from 'html2canvas';
+import { useAuth } from '../context/AuthContext';
 
 // External API configuration (Smart Edu)
 const SMART_EDU_API_URL = 'http://localhost:8081'; 
 
+interface ChatMessage {
+  sender: string;
+  text: string;
+  time: string;
+  isMine: boolean;
+}
+
 const VirtualClassroom = () => {
   const { id: roomId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [feedback, setFeedback] = useState('');
   const [loadingAI, setLoadingAI] = useState(false);
   const [connected, setConnected] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [chatInput, setChatInput] = useState('');
+  const chatEndRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const canvasRef = useRef<any>(null);
   const stompClient = useRef<Client | null>(null);
+
+  // Auto-scroll chat to bottom
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   // 1. Connect to Smart Edu WebSockets
   useEffect(() => {
@@ -28,7 +45,8 @@ const VirtualClassroom = () => {
       debug: (str) => console.log(str),
       onConnect: () => {
         setConnected(true);
-        // Subscribe to room events
+
+        // Subscribe to board events
         client.subscribe(`/topic/room/${roomId}/board`, (message) => {
           const event = JSON.parse(message.body);
           if (event.action === 'add' && event.element?.type === 'path') {
@@ -37,6 +55,18 @@ const VirtualClassroom = () => {
           } else if (event.action === 'clear') {
              canvasRef.current?.clearCanvas();
           }
+        });
+
+        // Subscribe to chat messages
+        client.subscribe(`/topic/room/${roomId}/chat`, (message) => {
+          const event = JSON.parse(message.body);
+          const now = new Date().toLocaleTimeString('es-CO', { timeStyle: 'short' });
+          setMessages(prev => [...prev, {
+            sender: event.sender,
+            text: event.text,
+            time: now,
+            isMine: event.sender === (user?.fullName ?? ''),
+          }]);
         });
       },
       onStompError: (frame) => {
@@ -50,7 +80,7 @@ const VirtualClassroom = () => {
     return () => {
       client.deactivate();
     };
-  }, [roomId]);
+  }, [roomId, user]);
 
   // 2. Sincronizar trazos
   const handleStroke = (path: CanvasPath) => {
@@ -78,7 +108,33 @@ const VirtualClassroom = () => {
     }
   };
 
-  // 3. Consume Smart Edu AI
+  // 3. Enviar mensaje de chat
+  const handleSendChat = () => {
+    const text = chatInput.trim();
+    if (!text) return;
+
+    if (stompClient.current?.connected) {
+      stompClient.current.publish({
+        destination: `/app/room/${roomId}/chat`,
+        body: JSON.stringify({
+          sender: user?.fullName ?? 'Usuario',
+          text,
+        })
+      });
+    } else {
+      // Fallback local si no hay conexión
+      const now = new Date().toLocaleTimeString('es-CO', { timeStyle: 'short' });
+      setMessages(prev => [...prev, {
+        sender: user?.fullName ?? 'Tú',
+        text,
+        time: now,
+        isMine: true,
+      }]);
+    }
+    setChatInput('');
+  };
+
+  // 4. Consume Smart Edu AI
   const handleAnalyze = async () => {
     const canvasContainer = document.getElementById('canvas-container');
     if (!canvasContainer) return;
@@ -144,7 +200,7 @@ const VirtualClassroom = () => {
         {/* Video Strip (Mock) */}
         <div style={{ display: 'flex', gap: '1rem', height: '120px', flexWrap: 'wrap' }}>
           <div style={{ flex: '1 1 150px', background: '#1e293b', borderRadius: '12px', position: 'relative', overflow: 'hidden', height: '100px' }}>
-            <div style={{ position: 'absolute', bottom: '0.5rem', left: '0.5rem', background: 'rgba(0,0,0,0.5)', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.7rem' }}>Tú (Estudiante)</div>
+            <div style={{ position: 'absolute', bottom: '0.5rem', left: '0.5rem', background: 'rgba(0,0,0,0.5)', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.7rem' }}>Tú ({user?.fullName ?? 'Estudiante'})</div>
             <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}><User size={40} color="#64748b" /></div>
           </div>
           <div style={{ flex: '1 1 150px', background: '#1e293b', borderRadius: '12px', position: 'relative', overflow: 'hidden', height: '100px' }}>
@@ -162,6 +218,7 @@ const VirtualClassroom = () => {
 
       {/* Right Sidebar: AI Feedback & Chat */}
       <div className="classroom-sidebar" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        {/* AI Feedback */}
         <div style={{ flex: 1, background: 'rgba(30,41,59,0.5)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
           <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', fontSize: '1.1rem' }}>
             <Sparkles size={20} color="#a855f7" /> Retroalimentación IA
@@ -180,13 +237,53 @@ const VirtualClassroom = () => {
           </div>
         </div>
 
-        <div style={{ height: '250px', background: 'rgba(30,41,59,0.5)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', padding: '1rem', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ flex: 1, overflowY: 'auto', marginBottom: '0.5rem' }}>
-            <p style={{ fontSize: '0.8rem', color: '#64748b', textAlign: 'center' }}>Hoy, 10:30 AM</p>
+        {/* Functional Chat */}
+        <div style={{ height: '280px', background: 'rgba(30,41,59,0.5)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', padding: '1rem', display: 'flex', flexDirection: 'column' }}>
+          <h4 style={{ margin: '0 0 0.75rem', fontSize: '0.95rem', color: '#94a3b8', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
+            💬 Chat del Aula
+          </h4>
+          <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem', paddingRight: '0.25rem' }}>
+            {messages.length === 0 && (
+              <p style={{ fontSize: '0.8rem', color: '#64748b', textAlign: 'center', marginTop: '1rem' }}>
+                El chat está vacío. Saluda a tu {user?.role === 'TUTOR' ? 'estudiante' : 'tutor'}!
+              </p>
+            )}
+            {messages.map((msg, i) => (
+              <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: msg.isMine ? 'flex-end' : 'flex-start' }}>
+                <span style={{ fontSize: '0.7rem', color: '#64748b', marginBottom: '0.2rem' }}>
+                  {msg.isMine ? 'Tú' : msg.sender} · {msg.time}
+                </span>
+                <div style={{
+                  background: msg.isMine ? 'linear-gradient(135deg, #a855f7, #ec4899)' : 'rgba(51,65,85,0.8)',
+                  color: 'white',
+                  padding: '0.4rem 0.8rem',
+                  borderRadius: msg.isMine ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
+                  fontSize: '0.85rem',
+                  maxWidth: '85%',
+                  wordBreak: 'break-word',
+                }}>
+                  {msg.text}
+                </div>
+              </div>
+            ))}
+            <div ref={chatEndRef} />
           </div>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <input type="text" placeholder="Escribe un mensaje..." style={{ flex: 1, background: '#1e293b', border: '1px solid #334155', borderRadius: '8px', padding: '0.5rem 1rem', color: 'white', fontSize: '0.9rem' }} />
-            <button style={{ background: '#a855f7', border: 'none', borderRadius: '8px', padding: '0.5rem', color: 'white' }}><Send size={18} /></button>
+          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
+            <input
+              id="chat-input"
+              type="text"
+              placeholder="Escribe un mensaje..."
+              value={chatInput}
+              onChange={e => setChatInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSendChat()}
+              style={{ flex: 1, background: '#1e293b', border: '1px solid #334155', borderRadius: '8px', padding: '0.5rem 1rem', color: 'white', fontSize: '0.9rem', outline: 'none' }}
+            />
+            <button
+              onClick={handleSendChat}
+              style={{ background: '#a855f7', border: 'none', borderRadius: '8px', padding: '0.5rem 0.75rem', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+            >
+              <Send size={18} />
+            </button>
           </div>
         </div>
       </div>
